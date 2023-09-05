@@ -1,12 +1,12 @@
 {
   "name": "gradoo-theme",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
-  "main": "lib/index.js",
+  "main": "lib/useTextEditor.js",
   "type": "commonjs",
-  "types": "lib/index.d.ts",
+  "types": "lib/types.d.ts",
   "files": [
-    "/lib"
+    "lib/**"
   ],
   "scripts": {
     "test": "jest",

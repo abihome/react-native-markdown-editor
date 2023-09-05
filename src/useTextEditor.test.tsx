@@ -6,7 +6,7 @@ import {
   PlatformMode,
   TextStyle,
 } from "./types";
-import useTextEditor, { TextEditorProps } from "./useTextEditor";
+import { useTextEditor, TextEditorProps } from "./useTextEditor";
 
 /*
 on iOS onSelectionChange is called before onChangeText

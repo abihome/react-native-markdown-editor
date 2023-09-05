@@ -51,7 +51,7 @@ export type TextEditorProps = {
   onRemovePhoto: (inputBlockInfoKey: LineKey) => void;
 };
 
-const useTextEditor = ({
+export const useTextEditor = ({
   platformMode,
   initialMarkdownText = "",
 }: TextEditorInitalProps): TextEditorProps => {
@@ -435,5 +435,3 @@ const useTextEditor = ({
     onRemovePhoto,
   };
 };
-
-export default useTextEditor;

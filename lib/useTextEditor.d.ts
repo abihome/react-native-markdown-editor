@@ -15,5 +15,5 @@ export type TextEditorProps = {
     onAddPhoto: (base64: string) => void;
     onRemovePhoto: (inputBlockInfoKey: LineKey) => void;
 };
-declare const useTextEditor: ({ platformMode, initialMarkdownText, }: TextEditorInitalProps) => TextEditorProps;
-export default useTextEditor;
+export declare const useTextEditor: ({ platformMode, initialMarkdownText, }: TextEditorInitalProps) => TextEditorProps;
+export {};

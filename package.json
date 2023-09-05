@@ -1,10 +1,10 @@
 {
   "name": "gradoo-theme",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "lib/index.js",
   "type": "commonjs",
-  "types": "lib/types.d.ts",
+  "types": "lib/index.d.ts",
   "files": [
     "lib/**"
   ],

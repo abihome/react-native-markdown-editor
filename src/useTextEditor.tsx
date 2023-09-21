@@ -1,4 +1,4 @@
-import { useState } from "react";
+import * as React from "react";
 import update from "immutability-helper";
 import {
   LineStyle,
@@ -55,15 +55,15 @@ export const useTextEditor = ({
   platformMode,
   initialMarkdownText = "",
 }: TextEditorInitalProps): TextEditorProps => {
-  const [inputBlockInfoMap, setInputBlockInfoMap] = useState(() =>
+  const [inputBlockInfoMap, setInputBlockInfoMap] = React.useState(() =>
     mardownToInputBlockInfoMap(initialMarkdownText)
   );
 
   //eslint-disable-next-line
   const [currentInputBlockKey, setCurrentInputBlockKey] =
-    useState<LineKey>("0");
+    React.useState<LineKey>("0");
 
-  const [includeSelectionEnd, setIncludeSelectionEnd] = useState(true);
+  const [includeSelectionEnd, setIncludeSelectionEnd] = React.useState(true);
 
   const markdown = inputBlockInfoMapToMarkdown(inputBlockInfoMap);
 

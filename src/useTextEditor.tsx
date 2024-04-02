@@ -3,7 +3,6 @@ import update from "immutability-helper";
 import {
   LineStyle,
   LineStyleMap,
-  PlatformMode,
   Selection,
   TextStyle,
   TextStyleMap,
@@ -26,7 +25,6 @@ import {
 } from "./utils";
 
 type TextEditorInitalProps = {
-  platformMode: PlatformMode;
   initialMarkdownText?: string;
 };
 
@@ -52,7 +50,6 @@ export type TextEditorProps = {
 };
 
 export const useTextEditor = ({
-  platformMode,
   initialMarkdownText = "",
 }: TextEditorInitalProps): TextEditorProps => {
   const [inputBlockInfoMap, setInputBlockInfoMap] = React.useState(() =>
@@ -150,8 +147,7 @@ export const useTextEditor = ({
     textShift: number;
     currentIncludeSelectionEnd: boolean;
   }) => {
-    const platformLastSelectionKey =
-      platformMode === "ios" ? lastSelectionKey : currentSelectionKey;
+    const platformLastSelectionKey = currentSelectionKey;
     if (platformLastSelectionKey) {
       //TODO: handle line shift selection
       setInputBlockInfoMap((currentInputBlockInfoMap) =>
@@ -214,10 +210,10 @@ export const useTextEditor = ({
       currentSelectionStart === currentSelectionEnd
         ? currentSelectionStart
         : null;
-    const cursorDiff = platformMode === "ios" ? 1 : 0;
+
     const lastChar =
       cursor !== null && textDiff == 1
-        ? newText[cursor - cursorDiff]
+        ? newText[cursor]
         : newText[newText.length - 1];
     const nextLine = lastChar === "\n";
     const previousLine = newText.length === 0 && textDiff < 0;
@@ -232,8 +228,7 @@ export const useTextEditor = ({
           )
         : "0:0";
 
-    const platformCurrentSelectionKey =
-      platformMode === "ios" ? currentSelectionKey : possibleNextSelectionKey;
+    const platformCurrentSelectionKey = possibleNextSelectionKey;
     const newLineIndex = getCurrentLineIndex(
       platformCurrentSelectionKey,
       newText

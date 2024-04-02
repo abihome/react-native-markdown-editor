@@ -1,6 +1,5 @@
-import { LineStyle, PlatformMode, Selection, TextStyle, LineKey, InputBlockInfoMap } from "./types";
+import { LineStyle, Selection, TextStyle, LineKey, InputBlockInfoMap } from "./types";
 type TextEditorInitalProps = {
-    platformMode: PlatformMode;
     initialMarkdownText?: string;
 };
 export type TextEditorProps = {
@@ -15,5 +14,5 @@ export type TextEditorProps = {
     onAddPhoto: (base64: string) => void;
     onRemovePhoto: (inputBlockInfoKey: LineKey) => void;
 };
-export declare const useTextEditor: ({ platformMode, initialMarkdownText, }: TextEditorInitalProps) => TextEditorProps;
+export declare const useTextEditor: ({ initialMarkdownText, }: TextEditorInitalProps) => TextEditorProps;
 export {};

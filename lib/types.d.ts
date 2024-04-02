@@ -1,10 +1,9 @@
-export type PlatformMode = 'ios' | 'android';
 export interface Selection {
     start: number;
     end: number;
 }
-export type LineStyle = '#' | '##' | '###' | 'body';
-export type TextStyle = '**' | '__' | '--' | '~~';
+export type LineStyle = "#" | "##" | "###" | "body";
+export type TextStyle = "**" | "__" | "--" | "~~";
 export type SelectionKey = `${number}:${number}`;
 export type LineKey = `${number}`;
 export type TextStyleMap = {
@@ -21,10 +20,10 @@ export type TextInfo = {
     lastSelectionKey?: SelectionKey;
 };
 export type TextBlockInfo = {
-    type: 'text';
+    type: "text";
 } & TextInfo;
 export type ImageBlockInfo = {
-    type: 'image';
+    type: "image";
     imgUrl: string;
 };
 export type InputBlockInfo = TextBlockInfo | ImageBlockInfo;

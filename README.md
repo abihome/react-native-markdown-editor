@@ -14,7 +14,7 @@ const {
   onLineStyle,
   onAddPhoto,
   onRemovePhoto,
-} = useTextEditor({ initialMarkdownText, platformMode: Platform.OS });
+} = useTextEditor({ initialMarkdownText });
 
   ...
 

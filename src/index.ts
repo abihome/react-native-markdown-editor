@@ -1,5 +1,4 @@
 export type {
-  PlatformMode,
   Selection,
   LineStyle,
   TextStyle,

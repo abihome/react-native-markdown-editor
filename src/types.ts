@@ -1,5 +1,3 @@
-export type PlatformMode = 'ios'| 'android'
-
 export interface Selection {
   start: number;
   end: number;
@@ -9,14 +7,14 @@ export interface Selection {
 // heading: ##
 // subheading: ###
 // body: body:
-export type LineStyle = '#' | '##' | '###' | 'body';
+export type LineStyle = "#" | "##" | "###" | "body";
 
 //none:
 //bold: ** **
 //italic __ __
 //underline -- --
 //strikethrough ~~ ~~
-export type TextStyle = '**' | '__' | '--' | '~~';
+export type TextStyle = "**" | "__" | "--" | "~~";
 
 export type SelectionKey = `${number}:${number}`;
 
@@ -37,11 +35,11 @@ export type TextInfo = {
 };
 
 export type TextBlockInfo = {
-  type: 'text';
+  type: "text";
 } & TextInfo;
 
 export type ImageBlockInfo = {
-  type: 'image';
+  type: "image";
   imgUrl: string;
 };
 
@@ -67,6 +65,6 @@ export interface StyledLineMap {
 }
 
 //constants
-export const LINE_TAGS: LineStyle[] = ['###', '##', '#'];
+export const LINE_TAGS: LineStyle[] = ["###", "##", "#"];
 
-export const TEXT_TAGS: TextStyle[] = ['**', '__', '--', '~~'];
+export const TEXT_TAGS: TextStyle[] = ["**", "__", "--", "~~"];

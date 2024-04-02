@@ -5153,8 +5153,8 @@ react-is@^17.0.1:
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
 "react-markdown-editor@git+https://github.com/abihome/react-markdown-editor.git":
-  version "1.0.5"
-  resolved "git+https://github.com/abihome/react-markdown-editor.git#4043ddd2caa0d39409cc03289d3ffe191e7c2814"
+  version "1.0.6"
+  resolved "git+https://github.com/abihome/react-markdown-editor.git#f6f7360d06fe4d2cf25e584d6adfa064b9827f8e"
   dependencies:
     immutability-helper "^3.1.1"
     react "18.1.0"

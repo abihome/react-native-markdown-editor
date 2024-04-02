@@ -191,7 +191,6 @@ export default function App() {
     onRemovePhoto,
   } = useTextEditor({
     initialMarkdownText,
-    platformMode: "android",
   });
 
   const inputBlockKeys = Object.keys(inputBlockInfoMap) as LineKey[];

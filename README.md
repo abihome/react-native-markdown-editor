@@ -1,6 +1,10 @@
 # react-markdown-editor
 
+![title](demo.gif)
+
 ## Usage
+
+Checkout /app-sample for usage example
 
 ```
 const {
@@ -72,54 +76,7 @@ Created based top of the [TextInput](https://reactnative.dev/docs/textinput) cal
 - `onChangeText: (inputBlockInfoKey: LineKey, text: string)`
 - `onSelectionChange: (inputBlockInfoKey: LineKey, selection: Selection)`
 
-```
-on iOS onSelectionChange is called before onChangeText
-
-'|' => 'H|'
-onSelectionChange(1,1)
-onChangeText('H')
-
-'|' => 'He|'
-onSelectionChange(2,2)
-onChangeText('He')
-
-'|' => 'Hey|'
-onSelectionChange(3,3)
-onChangeText('Hey')
-
-
-on android onChangeText is called before onSelectionChange
-
-'|' => 'H|'
-onChangeText('H')
-onSelectionChange(1,1)
-
-'|' => 'He|'
-onChangeText('He')
-onSelectionChange(2,2)
-
-
-'|' => 'Hey|'
-onChangeText('Hey')
-onSelectionChange(3,3)
-
--- change selection
-
-'|' => 'He|y'
-onSelectionChange(2,2)
-
-'|' => 'H|ey'
-onSelectionChange(1,1)
-
-'|' => '|Hey'
-onSelectionChange(0,0)
-```
-
 The user can entry text, style the text and also enter image, so the lib handle as input blocks
-
-Example
-
-![title](screen1.png)
 
 Markdown example
 
@@ -194,7 +151,7 @@ Input block example
 }
 ```
 
-The example better shows the core logic of the lib, we store as a `markdown` string but we handle the user change in structured `inputBlockInfoMap` object and both are converted to each other (`mardownToInputBlockInfoMap` and `inputBlockInfoMapToMarkdown`). So the core logic is manage
+The example better shows the core logic of the lib, we store as a `markdown` string but we handle the user change in structured `inputBlockInfoMap` object and both are converted to each other (`mardownToInputBlockInfoMap` and `inputBlockInfoMapToMarkdown`)
 
 So a basic example of the edit flow (more examples on tests)
 

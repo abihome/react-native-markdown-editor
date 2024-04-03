@@ -21,6 +21,7 @@ import {
   getStyledLineMap,
   useTextEditor,
 } from "react-markdown-editor";
+import * as ImagePicker from "expo-image-picker";
 
 type MarkdownTextProps = {
   children: string;
@@ -106,6 +107,7 @@ type StyleBarProps = {
   currentTextStyles?: TextStyle[];
   onLineStyle: (lineStyle: LineStyle) => void;
   onTextStyle: (textStyle: TextStyle) => void;
+  onGetImage: () => void;
 };
 
 function StyleBar({
@@ -113,9 +115,10 @@ function StyleBar({
   currentTextStyles = [],
   onLineStyle,
   onTextStyle,
+  onGetImage,
 }: StyleBarProps): JSX.Element {
   return (
-    <View>
+    <View style={{ backgroundColor: "#FFF" }}>
       <View style={{ flexDirection: "row" }}>
         {LINE_TEXT_STYLES.map((lineStyle) => {
           const selected = lineStyle === currentLineStyle;
@@ -172,12 +175,22 @@ function StyleBar({
           );
         })}
       </View>
+      <TouchableOpacity
+        style={{
+          flex: 1,
+          alignItems: "center",
+        }}
+        onPress={() => onGetImage()}
+      >
+        <Text>{"Add Photo"}</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
 export default function App() {
-  const initialMarkdownText = "Hey";
+  const initialMarkdownText =
+    "#Title example\n\n##Heading example\n\n###Subheading example\n\nContent example, testing **bold**, __italic__ --underline-- and ~~strikethrough~~\n";
   const {
     inputBlockInfoMap,
     markdown,
@@ -196,52 +209,84 @@ export default function App() {
   const inputBlockKeys = Object.keys(inputBlockInfoMap) as LineKey[];
   const inputAccessoryViewID = "toolbarAcessoryView";
 
+  const rawTextBlocks = markdown.split(/<img>|<\/img>/);
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView keyboardShouldPersistTaps="handled">
-        {inputBlockKeys.map((inputBlockKey, i) => {
-          const inputBlockInfo = inputBlockInfoMap[inputBlockKey];
-          if (inputBlockInfo.type === "text") {
-            const { text, textStyleMap, lineStyleMap } = inputBlockInfo;
-            return (
-              <TextInput
-                style={{ minHeight: 400 }}
-                multiline
-                inputAccessoryViewID={inputAccessoryViewID}
-                key={inputBlockKey}
-                onChangeText={(newText: string) => {
-                  // console.log("onChangeText", inputBlockKey, newText);
-                  onChangeText(inputBlockKey, newText);
-                }}
-                onEndEditing={() => {
-                  if (markdown != initialMarkdownText) {
-                    console.log("onSave", markdown);
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        style={{ paddingHorizontal: 16, paddingTop: 32 }}
+      >
+        <View style={{ minHeight: 200 }}>
+          {inputBlockKeys.map((inputBlockKey, i) => {
+            const inputBlockInfo = inputBlockInfoMap[inputBlockKey];
+            if (inputBlockInfo.type === "text") {
+              const { text, textStyleMap, lineStyleMap } = inputBlockInfo;
+              return (
+                <TextInput
+                  multiline
+                  inputAccessoryViewID={inputAccessoryViewID}
+                  key={inputBlockKey}
+                  onChangeText={(newText: string) =>
+                    onChangeText(inputBlockKey, newText)
                   }
-                }}
-                onSelectionChange={({
-                  nativeEvent: { selection },
-                }: NativeSyntheticEvent<TextInputSelectionChangeEventData>) =>
-                  onSelectionChange(inputBlockKey, selection)
-                }
-              >
-                <MarkdownText
-                  lineStyleMap={lineStyleMap}
-                  textStyleMap={textStyleMap}
+                  onEndEditing={() => {
+                    if (markdown != initialMarkdownText) {
+                      console.log("onSave", markdown);
+                    }
+                  }}
+                  onSelectionChange={({
+                    nativeEvent: { selection },
+                  }: NativeSyntheticEvent<TextInputSelectionChangeEventData>) =>
+                    onSelectionChange(inputBlockKey, selection)
+                  }
                 >
-                  {text}
-                </MarkdownText>
-              </TextInput>
-            );
-          } else {
-            const { imgUrl } = inputBlockInfo;
+                  <MarkdownText
+                    lineStyleMap={lineStyleMap}
+                    textStyleMap={textStyleMap}
+                  >
+                    {text}
+                  </MarkdownText>
+                </TextInput>
+              );
+            } else {
+              const { imgUrl } = inputBlockInfo;
+              return (
+                <View>
+                  <Image
+                    source={{ uri: `data:image/png;base64,${imgUrl}` }}
+                    resizeMode={"cover"}
+                    style={{ width: "100%", height: 200 }}
+                  />
+                  <TouchableOpacity
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      right: 0,
+                      backgroundColor: "#FFF",
+                    }}
+                    onPress={() => onRemovePhoto(inputBlockKey)}
+                  >
+                    <Text>{"Remove Photo"}</Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            }
+          })}
+        </View>
+        {rawTextBlocks.map((rawTextBlock, i) => {
+          if (i % 2 == 1) {
             return (
-              <Image
-                source={{ uri: `data:image/png;base64,${imgUrl}` }}
-                resizeMode={"cover"}
-                style={{ width: 200, height: 100 }}
-              />
+              <Text style={{ borderColor: "#999", borderWidth: 1 }}>
+                {`data:image/png;base64,${rawTextBlock.substring(0, 40)}...`}
+              </Text>
             );
           }
+          return (
+            <Text style={{ borderColor: "#999", borderWidth: 1 }}>
+              {rawTextBlock}
+            </Text>
+          );
         })}
       </ScrollView>
       <InputAccessoryView nativeID={inputAccessoryViewID}>
@@ -250,6 +295,20 @@ export default function App() {
           currentTextStyles={currentTextStyles}
           onLineStyle={onLineStyle}
           onTextStyle={onTextStyle}
+          onGetImage={() => {
+            ImagePicker.launchImageLibraryAsync({
+              mediaTypes: ImagePicker.MediaTypeOptions.All,
+              allowsEditing: true,
+              aspect: [4, 3],
+              quality: 0.3,
+              base64: true,
+            })
+              .then((result) => {
+                const base64 = result.assets?.[0].base64;
+                onAddPhoto(base64);
+              })
+              .catch((e) => console.log(e));
+          }}
         />
       </InputAccessoryView>
     </SafeAreaView>
@@ -261,7 +320,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     padding: 16,
-    borderColor: "red",
-    borderWidth: 1,
   },
 });

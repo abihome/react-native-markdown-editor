@@ -13,7 +13,7 @@
     "expo-image-picker": "~14.7.1",
     "expo-status-bar": "~1.11.1",
     "react": "18.2.0",
-    "react-markdown-editor": "git+https://github.com/abihome/react-markdown-editor.git",
+    "react-native-markdown-editor": "git+https://github.com/abihome/react-native-markdown-editor.git",
     "react-native": "0.73.6"
   },
   "devDependencies": {

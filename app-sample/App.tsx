@@ -8,7 +8,7 @@ import {
   Image,
   SafeAreaView,
   View,
-  TouchableOpacity,
+  Pressable,
   ScrollView,
   InputAccessoryView,
 } from "react-native";
@@ -20,7 +20,7 @@ import {
   TextStyleMap,
   getStyledLineMap,
   useTextEditor,
-} from "react-markdown-editor";
+} from "react-native-markdown-editor";
 import * as ImagePicker from "expo-image-picker";
 
 type MarkdownTextProps = {
@@ -123,7 +123,7 @@ function StyleBar({
         {LINE_TEXT_STYLES.map((lineStyle) => {
           const selected = lineStyle === currentLineStyle;
           return (
-            <TouchableOpacity
+            <Pressable
               key={lineStyle}
               style={{
                 flex: 1,
@@ -140,7 +140,7 @@ function StyleBar({
               >
                 {LINE_TEXT_NAME_MAP[lineStyle]}
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           );
         })}
       </View>
@@ -148,7 +148,7 @@ function StyleBar({
         {TEXT_STYLES.map((textStyle, i) => {
           const selected = currentTextStyles.includes(textStyle);
           return (
-            <TouchableOpacity
+            <Pressable
               key={textStyle}
               style={{
                 flex: 1,
@@ -171,11 +171,11 @@ function StyleBar({
               >
                 {TEXT_STYLE_NAME_MAP[textStyle]}
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           );
         })}
       </View>
-      <TouchableOpacity
+      <Pressable
         style={{
           flex: 1,
           alignItems: "center",
@@ -183,7 +183,7 @@ function StyleBar({
         onPress={() => onGetImage()}
       >
         <Text>{"Add Photo"}</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }
@@ -225,6 +225,7 @@ export default function App() {
               return (
                 <TextInput
                   multiline
+                  style={{ height: 200 }}
                   inputAccessoryViewID={inputAccessoryViewID}
                   key={inputBlockKey}
                   onChangeText={(newText: string) =>
@@ -258,7 +259,7 @@ export default function App() {
                     resizeMode={"cover"}
                     style={{ width: "100%", height: 200 }}
                   />
-                  <TouchableOpacity
+                  <Pressable
                     style={{
                       position: "absolute",
                       top: 0,
@@ -268,7 +269,7 @@ export default function App() {
                     onPress={() => onRemovePhoto(inputBlockKey)}
                   >
                     <Text>{"Remove Photo"}</Text>
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
               );
             }

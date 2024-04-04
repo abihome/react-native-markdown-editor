@@ -1,10 +1,10 @@
-# react-markdown-editor
+# react-native-markdown-editor
 
 ![title](demo.gif)
 
 ## Usage
 
-Checkout /app-sample for usage example
+iOS and Android support. Checkout /app-sample for usage example
 
 ```
 const {

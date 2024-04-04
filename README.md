@@ -71,7 +71,7 @@ const {
 
 Built to handle text style editor on Gradoo Reports module, main idea is to handle/store in a markdown syntax. The user change the style of the line, enterying/typing text or on the text selection.
 
-Created based top of the [TextInput](https://reactnative.dev/docs/textinput) callbacks from `react-native`, but can used in react since this modules doesn't import any `react-native` dependence.
+Created based top of the [TextInput](https://reactnative.dev/docs/textinput) callbacks from `react-native`
 
 - `onChangeText: (inputBlockInfoKey: LineKey, text: string)`
 - `onSelectionChange: (inputBlockInfoKey: LineKey, selection: Selection)`

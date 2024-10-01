@@ -458,8 +458,9 @@ const getStyledTexts = (
     (sel) => sel.start >= textStart && sel.end <= textEnd
   );
 
+  //'**Hey******' => ensure [[3,3], [0,3]] => [[0,3] ,[3,3]]
   const sortedSelections = filteredSelections.sort(
-    (sa, sb) => sa.end - sb.start
+    (sa, sb) => sa.start - sb.start
   );
 
   if (sortedSelections.length == 0) {

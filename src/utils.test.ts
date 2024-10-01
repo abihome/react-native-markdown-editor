@@ -172,15 +172,12 @@ test('getTextStyleSelectionsFromMarkdownText', () => {
   ]);
 });
 
-test('markdown <=> inputBlockInfoMap', () => {
-  Object.keys(textSampleMap).map((textSampleKey) => {
+Object.keys(textSampleMap).map((textSampleKey) => {
+  test(`markdown <=> inputBlockInfoMap - ${textSampleKey}`, () => {
     const textSample = textSampleMap[textSampleKey];
     expect(mardownToInputBlockInfoMap(textSample.markdown)).toStrictEqual(
       textSample.inputBlockInfoMap,
     );
-  });
-  Object.keys(textSampleMap).map((textSampleKey) => {
-    const textSample = textSampleMap[textSampleKey];
     expect(inputBlockInfoMapToMarkdown(textSample.inputBlockInfoMap)).toBe(
       textSample.markdown,
     );
@@ -447,8 +444,8 @@ test('getCurrentLineIndex', () => {
   expect(getCurrentLineIndex('16:18', 'Hey you\nAnd you\nFoo')).toBe(2); //'Hey you\nAnd you\n|Foo|'
 });
 
-test('getStyledLineMap', () => {
-  Object.keys(textSampleMap).map((textSampleKey) => {
+Object.keys(textSampleMap).map((textSampleKey) => {
+  test(`getStyledLineMap - ${textSampleKey}`, () => {
     const textSample = textSampleMap[textSampleKey];
     const textBlockInfo = textSample.inputBlockInfoMap['0'] as TextBlockInfo;
     expect(

@@ -743,6 +743,42 @@ export const textSampleMap: TextSampleMap = {
       },
     },
   },
+  boldHeyBold: {
+    markdown: '**Hey******',
+    inputBlockInfoMap: {
+      '0': {
+        type: 'text',
+        text: 'Hey',
+        lineStyleMap: {
+          '0': 'body',
+        },
+        textStyleMap: {
+          //ensure sort selection is working
+          '3:3': ['**'],
+          '0:3': ['**'],
+        },
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
+      },
+    },
+    inputInfoStyledLineMap: {
+      '0': {
+        '0': {
+          lineStyle: 'body',
+          styledTexts: [
+            {
+              text: 'Hey',
+              bold: true,
+            },
+            {
+              text: '',
+              bold: true,
+            },
+          ],
+        },
+      },
+    },
+  },
   //italic
   italicHey: {
     markdown: '__Hey__ you',

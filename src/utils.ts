@@ -11,19 +11,19 @@ import {
   InputBlockInfoMap,
   LINE_TAGS,
   TEXT_TAGS,
-} from "./types";
+} from './types';
 
 export const getKeyFromSelection = (
   start: number,
-  end: number
+  end: number,
 ): SelectionKey => {
   return `${start}:${end}`;
 };
 
 export const getSelectionFromKey = (
-  key: SelectionKey
+  key: SelectionKey,
 ): { start: number; end: number } => {
-  const [start, end] = key.split(":");
+  const [start, end] = key.split(':');
   return {
     start: parseInt(start) || 0,
     end: parseInt(end) || 0,
@@ -33,7 +33,7 @@ export const getSelectionFromKey = (
 export const getSelectionText = (
   text: string,
   start: number,
-  end?: number
+  end?: number,
 ): string => {
   return text.substr(start, end ? end - start : undefined);
 };
@@ -43,7 +43,7 @@ export const stringReplaceAt = (
   start: number,
   end: number,
   replacement: string,
-  replacementOffset = 0
+  replacementOffset = 0,
 ): string => {
   return (
     string.substr(0, start + replacementOffset) +
@@ -55,7 +55,7 @@ export const stringReplaceAt = (
 export const stringInsertAt = (
   string: string,
   at: number,
-  replacement: string
+  replacement: string,
 ): string => {
   return string.substr(0, at) + replacement + string.substr(at);
 };
@@ -68,12 +68,12 @@ export const getLineStyle = (text: string): LineStyle => {
       return lineTag;
     }
   }
-  return "body";
+  return 'body';
 };
 
 export const getTextStyleSelectionsFromMarkdownText = (
   markdowText: string,
-  textStyle: TextStyle
+  textStyle: TextStyle,
 ): Selection[] => {
   const selections: Selection[] = [];
   const filteredText = clearText(markdowText, [textStyle]);
@@ -103,7 +103,7 @@ export const getTextStyleSelectionsFromMarkdownText = (
 
 export const getLineStyleMap = (rawText: string): LineStyleMap => {
   const lineStyleMap: LineStyleMap = {};
-  const lines = rawText.split("\n");
+  const lines = rawText.split('\n');
 
   lines.forEach((text, i) => {
     const lineStyle = getLineStyle(text);
@@ -115,19 +115,19 @@ export const getLineStyleMap = (rawText: string): LineStyleMap => {
 };
 
 export const mardownToInputBlockInfoMap = (
-  mardownText: string
+  mardownText: string,
 ): InputBlockInfoMap => {
-  if (mardownText === "") {
+  if (mardownText === '') {
     return {
-      "0": {
-        type: "text",
-        text: "",
+      '0': {
+        type: 'text',
+        text: '',
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       },
     };
   }
@@ -137,7 +137,7 @@ export const mardownToInputBlockInfoMap = (
   rawTextBlocks.forEach((rawTextBlock, index) => {
     if (index % 2 == 1) {
       inputBlockInfoMap[`${index}`] = {
-        type: "image",
+        type: 'image',
         imgUrl: rawTextBlock,
       };
       return;
@@ -149,7 +149,7 @@ export const mardownToInputBlockInfoMap = (
     TEXT_TAGS.forEach((TAG) => {
       const textStyleSelections = getTextStyleSelectionsFromMarkdownText(
         rawTextBlock,
-        TAG
+        TAG,
       );
       textStyleSelections.forEach((textStyleSelection) => {
         const { start, end } = textStyleSelection;
@@ -165,12 +165,12 @@ export const mardownToInputBlockInfoMap = (
     });
 
     inputBlockInfoMap[`${index}`] = {
-      type: "text",
+      type: 'text',
       text: clearText(rawTextBlock),
       lineStyleMap,
       textStyleMap,
-      currentSelectionKey: "0:0",
-      lastSelectionKey: "0:0",
+      currentSelectionKey: '0:0',
+      lastSelectionKey: '0:0',
     };
   });
 
@@ -178,22 +178,22 @@ export const mardownToInputBlockInfoMap = (
 };
 
 export const inputBlockInfoMapToMarkdown = (
-  inputBlockInfoMap: InputBlockInfoMap
+  inputBlockInfoMap: InputBlockInfoMap,
 ): string => {
   const markdownLines: string[] = [];
   const inputBlockKeys = Object.keys(inputBlockInfoMap) as LineKey[];
 
   inputBlockKeys.map((inputBlockKey) => {
-    let markdown = "";
+    let markdown = '';
     const inputBlockInfo = inputBlockInfoMap[inputBlockKey];
-    if (inputBlockInfo.type === "text") {
+    if (inputBlockInfo.type === 'text') {
       const { text, textStyleMap, lineStyleMap } = inputBlockInfo;
       markdown = `${markdown}${text}`;
       let replacementOffset = 0;
 
       const selectionKeys = Object.keys(textStyleMap) as SelectionKey[];
       const selections = selectionKeys.map((selectionKey) =>
-        getSelectionFromKey(selectionKey)
+        getSelectionFromKey(selectionKey),
       );
 
       const sortedSelections = selections.sort((sa, sb) => sa.start - sb.start);
@@ -201,7 +201,7 @@ export const inputBlockInfoMapToMarkdown = (
       sortedSelections.map((selection) => {
         const { start, end } = selection;
         const textStyles = textStyleMap[getKeyFromSelection(start, end)];
-        const tag = textStyles.join("");
+        const tag = textStyles.join('');
         const subText = getSelectionText(text, start, end);
         const replacedText = `${tag}${subText}${tag}`;
         markdown = stringReplaceAt(
@@ -209,13 +209,13 @@ export const inputBlockInfoMapToMarkdown = (
           start,
           end || markdown.length,
           replacedText,
-          replacementOffset
+          replacementOffset,
         );
 
         replacementOffset += tag.length * 2;
       });
 
-      const lines = markdown.split("\n");
+      const lines = markdown.split('\n');
 
       let textCount = 0;
       lines.forEach((line, i) => {
@@ -223,7 +223,7 @@ export const inputBlockInfoMapToMarkdown = (
         const lineTag = lineStyleMap[`${i}`];
         let lineTagSize = 0;
 
-        if (lineTag && lineTag != "body") {
+        if (lineTag && lineTag != 'body') {
           markdown = stringInsertAt(markdown, start, lineTag);
 
           lineTagSize = lineTag.length;
@@ -238,35 +238,35 @@ export const inputBlockInfoMapToMarkdown = (
     markdownLines.push(markdown);
   });
 
-  return markdownLines.join("");
+  return markdownLines.join('');
 };
 
 export const clearText = (
   markdown: string,
-  keepTags: (LineStyle | TextStyle)[] = []
+  keepTags: (LineStyle | TextStyle)[] = [],
 ): string => {
   // /\*\*|__/g
   const regexTagMap: { [key in LineStyle | TextStyle]: string } = {
-    "**": "\\*\\*",
-    __: "__",
-    "~~": "~~",
-    "--": "--",
-    "#": "#",
-    "##": "##",
-    "###": "###",
-    body: "",
+    '**': '\\*\\*',
+    __: '__',
+    '~~': '~~',
+    '--': '--',
+    '#': '#',
+    '##': '##',
+    '###': '###',
+    body: '',
   };
   const allTags = [...LINE_TAGS, ...TEXT_TAGS];
   const filteredTags = allTags.filter((tag) => !keepTags.includes(tag));
   const regexTags = filteredTags.map((tag) => regexTagMap[tag]);
-  const regex = new RegExp(regexTags.join("|"), "g");
-  return markdown.replace(regex, "");
+  const regex = new RegExp(regexTags.join('|'), 'g');
+  return markdown.replace(regex, '');
 };
 
 export const getClosestSelectionKey = (
   textStyleMap: TextStyleMap,
   currentSelectionKey: SelectionKey,
-  includeSelectionEnd = true
+  includeSelectionEnd = true,
 ): SelectionKey | undefined => {
   // console.log('getClosestSelectionKey', {
   //   textStyleMap,
@@ -281,7 +281,7 @@ export const getClosestSelectionKey = (
   const cursorIndex = start;
 
   const selections = (Object.keys(textStyleMap) as SelectionKey[]).map(
-    (selectionKey) => getSelectionFromKey(selectionKey)
+    (selectionKey) => getSelectionFromKey(selectionKey),
   );
 
   let i,
@@ -340,7 +340,7 @@ export const handleLineStyleShiftSelection = ({
   Array.from(Array(lineCount).keys()).map((lineNum) => {
     const lineKey = lineNum.toString() as LineKey;
     if (!updatedLineStyleMap[lineKey]) {
-      updatedLineStyleMap[lineKey] = "body";
+      updatedLineStyleMap[lineKey] = 'body';
     }
   });
 
@@ -367,7 +367,7 @@ export const handleTextStyleShiftSelection = ({
   const closestSelectionKey = getClosestSelectionKey(
     textStyleMap,
     currentSelectionKey,
-    includeSelectionEnd
+    includeSelectionEnd,
   );
 
   selectionKeys.map((selectionKey) => {
@@ -382,7 +382,7 @@ export const handleTextStyleShiftSelection = ({
 
       const updatedSelectionKey = getKeyFromSelection(
         closestSelection.start,
-        closestSelection.end + shift
+        closestSelection.end + shift,
       );
 
       updatedTextStyleMap[updatedSelectionKey] =
@@ -399,7 +399,7 @@ export const handleTextStyleShiftSelection = ({
     ) {
       const shiftedSelectionKey = getKeyFromSelection(
         currentSelection.start + shift,
-        currentSelection.end + shift
+        currentSelection.end + shift,
       );
 
       updatedTextStyleMap[shiftedSelectionKey] = textStyleMap[selectionKey];
@@ -414,10 +414,10 @@ export const handleTextStyleShiftSelection = ({
 
 export const getCurrentLineIndex = (
   currentSelectionKey: SelectionKey,
-  text: string
+  text: string,
 ): number => {
   const currentSelection = getSelectionFromKey(currentSelectionKey);
-  const lines = text.split("\n");
+  const lines = text.split('\n');
 
   let i,
     lineLength,
@@ -443,7 +443,7 @@ export const getCurrentLineIndex = (
 const getStyledTexts = (
   text: string,
   textStyleMap: TextStyleMap,
-  textStart = 0
+  textStart = 0,
 ): StyledText[] => {
   const selectionKeys = Object.keys(textStyleMap) as SelectionKey[];
   const textEnd = textStart + text.length;
@@ -451,16 +451,16 @@ const getStyledTexts = (
   const styledTexts: StyledText[] = [];
 
   const selections = selectionKeys.map((selectionKey) =>
-    getSelectionFromKey(selectionKey)
+    getSelectionFromKey(selectionKey),
   );
 
   const filteredSelections = selections.filter(
-    (sel) => sel.start >= textStart && sel.end <= textEnd
+    (sel) => sel.start >= textStart && sel.end <= textEnd,
   );
 
   //'**Hey******' => ensure [[3,3], [0,3]] => [[0,3] ,[3,3]]
   const sortedSelections = filteredSelections.sort(
-    (sa, sb) => sa.start - sb.start
+    (sa, sb) => sa.start - sb.start,
   );
 
   if (sortedSelections.length == 0) {
@@ -490,19 +490,19 @@ const getStyledTexts = (
       text: text.substr(nStart, nEnd - nStart),
     };
 
-    if (textStyles.includes("**")) {
+    if (textStyles.includes('**')) {
       styledText.bold = true;
     }
 
-    if (textStyles.includes("__")) {
+    if (textStyles.includes('__')) {
       styledText.italic = true;
     }
 
-    if (textStyles.includes("--")) {
+    if (textStyles.includes('--')) {
       styledText.underline = true;
     }
 
-    if (textStyles.includes("~~")) {
+    if (textStyles.includes('~~')) {
       styledText.strikethrough = true;
     }
 
@@ -516,7 +516,7 @@ const getStyledTexts = (
       styledTexts.push({
         text: text.substr(
           nEnd,
-          sortedSelections[i + 1].start - textStart - nEnd
+          sortedSelections[i + 1].start - textStart - nEnd,
         ),
       });
     }
@@ -535,18 +535,18 @@ const getStyledTexts = (
 export const getStyledLineMap = (
   text: string,
   textStyleMap: TextStyleMap,
-  lineStyleMap: LineStyleMap
+  lineStyleMap: LineStyleMap,
 ): StyledLineMap => {
   const styledLineMap: StyledLineMap = {};
 
-  const lines = text.split("\n");
+  const lines = text.split('\n');
   let textCount = 0;
   lines.forEach((line, i) => {
     const lineKey = i.toString() as LineKey;
     const styledTexts = getStyledTexts(line, textStyleMap, textCount);
 
     styledLineMap[lineKey] = {
-      lineStyle: "body",
+      lineStyle: 'body',
       styledTexts,
     };
 
@@ -562,7 +562,7 @@ export const getStyledLineMap = (
 
 export const getTextStyles = (
   textStyleMap: TextStyleMap,
-  selectionKey?: SelectionKey
+  selectionKey?: SelectionKey,
 ): TextStyle[] => {
   if (!selectionKey) {
     return [];
@@ -588,10 +588,10 @@ export const splitLineStyleMap = ({
   let rightLineCount = 0;
 
   const leftLineStyleKeys = lineStyleKeys.filter(
-    (lineStyleKey) => parseInt(lineStyleKey) < currentLineIndex
+    (lineStyleKey) => parseInt(lineStyleKey) < currentLineIndex,
   );
   const rightLineStyleKeys = lineStyleKeys.filter(
-    (lineStyleKey) => parseInt(lineStyleKey) >= currentLineIndex
+    (lineStyleKey) => parseInt(lineStyleKey) >= currentLineIndex,
   );
 
   leftLineStyleKeys.forEach((leftLineStyleKey) => {
@@ -599,13 +599,13 @@ export const splitLineStyleMap = ({
     leftLineCount += 1;
   });
 
-  if (leftText[leftText.length - 1] === "\n") {
-    leftLineStyleMap[`${leftLineCount}`] = "body";
+  if (leftText[leftText.length - 1] === '\n') {
+    leftLineStyleMap[`${leftLineCount}`] = 'body';
     leftLineCount += 1;
   }
 
-  if (rightText[0] === "\n") {
-    rightLineStyleMap[`${rightLineCount}`] = "body";
+  if (rightText[0] === '\n') {
+    rightLineStyleMap[`${rightLineCount}`] = 'body';
     rightLineCount += 1;
   }
 
@@ -635,16 +635,16 @@ export const mergeLineStyleMap = ({
   let lineCount = 0;
 
   const leftLineStyleKeys: LineKey[] = Object.keys(
-    leftLineStyleMap
+    leftLineStyleMap,
   ) as LineKey[];
   const rightLineStyleKeys: LineKey[] = Object.keys(
-    rightLineStyleMap
+    rightLineStyleMap,
   ) as LineKey[];
 
   leftLineStyleKeys.forEach((leftLineStyleKey, index) => {
     if (
       index === leftLineStyleKeys.length - 1 &&
-      leftText[leftText.length - 1] === "\n"
+      leftText[leftText.length - 1] === '\n'
     ) {
       return;
     }
@@ -653,7 +653,7 @@ export const mergeLineStyleMap = ({
   });
 
   rightLineStyleKeys.forEach((rightLineStyleKey, index) => {
-    if (index === 0 && rightText[0] === "\n") {
+    if (index === 0 && rightText[0] === '\n') {
       return;
     }
     lineStyleMap[`${lineCount}`] = rightLineStyleMap[rightLineStyleKey];
@@ -732,14 +732,14 @@ export const splitInputBlockInfoMap = ({
   const inputKeys = Object.keys(inputBlockInfoMap) as LineKey[];
   inputKeys.forEach((inputKey) => {
     const inputBlockInfo = inputBlockInfoMap[inputKey];
-    if (inputKey === inputBlockInfoKey && inputBlockInfo.type === "text") {
+    if (inputKey === inputBlockInfoKey && inputBlockInfo.type === 'text') {
       const { text, currentSelectionKey } = inputBlockInfo;
       const { end: cursor } = getSelectionFromKey(currentSelectionKey);
 
       const leftText = text.substring(0, cursor);
       const rightText = text.substring(cursor, text.length);
 
-      const lineShift = rightText[0] === "\n" ? 1 : 0;
+      const lineShift = rightText[0] === '\n' ? 1 : 0;
 
       const currentLineIndex =
         getCurrentLineIndex(`${cursor}:${cursor}`, text) + lineShift;
@@ -762,14 +762,14 @@ export const splitInputBlockInfoMap = ({
         text: leftText,
         lineStyleMap: leftLineStyleMap,
         textStyleMap: leftTextStyleMap,
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       };
       splitedInputBlockIndex += 1;
 
       //image
       splitedInputBlockInfoMap[`${splitedInputBlockIndex}`] = {
-        type: "image",
+        type: 'image',
         imgUrl: imgUri,
       };
       splitedInputBlockIndex += 1;
@@ -780,8 +780,8 @@ export const splitInputBlockInfoMap = ({
         text: rightText,
         lineStyleMap: rightLineStyleMap,
         textStyleMap: rightTextStyleMap,
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       };
       splitedInputBlockIndex += 1;
       return;
@@ -811,13 +811,13 @@ export const mergeInputBlockInfoMap = ({
   inputKeys.forEach((inputKey) => {
     const inputBlockInfo = inputBlockInfoMap[inputKey];
 
-    if (inputKey == leftInputBlockInfoKey && inputBlockInfo.type === "text") {
+    if (inputKey == leftInputBlockInfoKey && inputBlockInfo.type === 'text') {
       const leftInputBlockInfo = inputBlockInfoMap[leftInputBlockInfoKey];
       const rightInputBlockInfo = inputBlockInfoMap[rightInputBlockInfoKey];
 
       if (
-        leftInputBlockInfo.type === "text" &&
-        rightInputBlockInfo.type === "text"
+        leftInputBlockInfo.type === 'text' &&
+        rightInputBlockInfo.type === 'text'
       ) {
         const lineStyleMap = mergeLineStyleMap({
           leftLineStyleMap: leftInputBlockInfo.lineStyleMap,
@@ -835,9 +835,9 @@ export const mergeInputBlockInfoMap = ({
         const leftText = leftInputBlockInfo.text;
         const rightText = rightInputBlockInfo.text;
         const lineSeparator =
-          leftText[leftText.length - 1] === "\n" || rightText[0] === "\n"
-            ? ""
-            : "\n";
+          leftText[leftText.length - 1] === '\n' || rightText[0] === '\n'
+            ? ''
+            : '\n';
         const text = `${leftText}${lineSeparator}${rightText}`;
 
         mergedInputBlockInfoMap[leftInputBlockInfoKey] = {
@@ -845,8 +845,8 @@ export const mergeInputBlockInfoMap = ({
           text,
           lineStyleMap,
           textStyleMap,
-          currentSelectionKey: "0:0",
-          lastSelectionKey: "0:0",
+          currentSelectionKey: '0:0',
+          lastSelectionKey: '0:0',
         };
         mergeInputBlockIndex += 1;
       }

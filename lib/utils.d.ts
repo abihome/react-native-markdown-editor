@@ -1,4 +1,4 @@
-import { TextStyleMap, Selection, TextStyle, SelectionKey, LineStyleMap, StyledLineMap, LineStyle, LineKey, InputBlockInfoMap } from "./types";
+import { TextStyleMap, Selection, TextStyle, SelectionKey, LineStyleMap, StyledLineMap, LineStyle, LineKey, InputBlockInfoMap } from './types';
 export declare const getKeyFromSelection: (start: number, end: number) => SelectionKey;
 export declare const getSelectionFromKey: (key: SelectionKey) => {
     start: number;

@@ -1,6 +1,6 @@
 {
-  "name": "gradoo-theme",
-  "version": "1.0.6",
+  "name": "react-native-markdown-editor",
+  "version": "1.0.7",
   "description": "",
   "main": "lib/index.js",
   "type": "commonjs",

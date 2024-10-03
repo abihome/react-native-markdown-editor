@@ -5165,8 +5165,8 @@ react-is@^17.0.1:
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
 "react-native-markdown-editor@git+https://github.com/abihome/react-native-markdown-editor.git":
-  version "1.0.6"
-  resolved "git+https://github.com/abihome/react-native-markdown-editor.git#388f563b45541f8709ed8b5e9f08ddc877974e48"
+  version "1.0.8"
+  resolved "git+https://github.com/abihome/react-native-markdown-editor.git#e5f2a135cebd85ce983192eae480d92dd4757ac2"
   dependencies:
     immutability-helper "^3.1.1"
     react "18.1.0"

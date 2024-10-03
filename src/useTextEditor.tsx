@@ -1,5 +1,5 @@
-import * as React from "react";
-import update from "immutability-helper";
+import * as React from 'react';
+import update from 'immutability-helper';
 import {
   LineStyle,
   LineStyleMap,
@@ -9,7 +9,7 @@ import {
   TextInfo,
   LineKey,
   InputBlockInfoMap,
-} from "./types";
+} from './types';
 import {
   mardownToInputBlockInfoMap,
   getKeyFromSelection,
@@ -22,18 +22,18 @@ import {
   inputBlockInfoMapToMarkdown,
   splitInputBlockInfoMap,
   mergeInputBlockInfoMap,
-} from "./utils";
+} from './utils';
 
 type TextEditorInitalProps = {
   initialMarkdownText?: string;
 };
 
 const DEFAULT_TEXT_INFO: TextInfo = {
-  text: "",
+  text: '',
   lineStyleMap: {},
   textStyleMap: {},
-  currentSelectionKey: "0:0",
-  lastSelectionKey: "0:0",
+  currentSelectionKey: '0:0',
+  lastSelectionKey: '0:0',
 };
 
 export type TextEditorProps = {
@@ -50,15 +50,15 @@ export type TextEditorProps = {
 };
 
 export const useTextEditor = ({
-  initialMarkdownText = "",
+  initialMarkdownText = '',
 }: TextEditorInitalProps): TextEditorProps => {
   const [inputBlockInfoMap, setInputBlockInfoMap] = React.useState(() =>
-    mardownToInputBlockInfoMap(initialMarkdownText)
+    mardownToInputBlockInfoMap(initialMarkdownText),
   );
 
   //eslint-disable-next-line
   const [currentInputBlockKey, setCurrentInputBlockKey] =
-    React.useState<LineKey>("0");
+    React.useState<LineKey>('0');
 
   const [includeSelectionEnd, setIncludeSelectionEnd] = React.useState(true);
 
@@ -68,7 +68,7 @@ export const useTextEditor = ({
 
   // const  = currentInputBlockInfo
   const textInfo =
-    currentInputBlockInfo?.type === "text"
+    currentInputBlockInfo?.type === 'text'
       ? currentInputBlockInfo
       : DEFAULT_TEXT_INFO;
 
@@ -89,17 +89,17 @@ export const useTextEditor = ({
   const closestSelectionKey = getClosestSelectionKey(
     textStyleMap,
     currentSelectionKey,
-    includeSelectionEnd
+    includeSelectionEnd,
   );
 
   const currentSelectionTextStyles = getTextStyles(
     textStyleMap,
-    currentSelectionKey
+    currentSelectionKey,
   );
 
   const closestSelectionTextStyles = getTextStyles(
     textStyleMap,
-    closestSelectionKey
+    closestSelectionKey,
   );
 
   let currentTextStyles: TextStyle[] = [];
@@ -115,10 +115,10 @@ export const useTextEditor = ({
 
   const onSelectionChange = (
     inputBlockInfoKey: LineKey,
-    { start, end }: Selection
+    { start, end }: Selection,
   ) => {
     const inputBlockInfo = inputBlockInfoMap?.[inputBlockInfoKey];
-    if (inputBlockInfo.type === "text") {
+    if (inputBlockInfo.type === 'text') {
       setCurrentInputBlockKey(inputBlockInfoKey);
       const inputBlockCurrentSelectionKey = inputBlockInfo.currentSelectionKey;
       setInputBlockInfoMap((currentInputBlockInfoMap) =>
@@ -127,7 +127,7 @@ export const useTextEditor = ({
             currentSelectionKey: { $set: getKeyFromSelection(start, end) },
             lastSelectionKey: { $set: inputBlockCurrentSelectionKey },
           },
-        })
+        }),
       );
     }
   };
@@ -176,7 +176,7 @@ export const useTextEditor = ({
               },
             },
           },
-        })
+        }),
       );
     }
   };
@@ -189,7 +189,7 @@ export const useTextEditor = ({
         [inputBlockInfoKey]: {
           text: { $set: newText },
         },
-      })
+      }),
     );
 
     if (newText.length === 0) {
@@ -199,7 +199,7 @@ export const useTextEditor = ({
             lineStyleMap: { $set: {} },
             textStyleMap: { $set: {} },
           },
-        })
+        }),
       );
       return;
     }
@@ -215,23 +215,23 @@ export const useTextEditor = ({
       cursor !== null && textDiff == 1
         ? newText[cursor]
         : newText[newText.length - 1];
-    const nextLine = lastChar === "\n";
+    const nextLine = lastChar === '\n';
     const previousLine = newText.length === 0 && textDiff < 0;
-    const currentTextLines = currentText.split("\n");
-    const newTextLines = newText.split("\n");
+    const currentTextLines = currentText.split('\n');
+    const newTextLines = newText.split('\n');
 
     const possibleNextSelectionKey =
       currentSelectionStart === currentSelectionEnd
         ? getKeyFromSelection(
             currentSelectionStart + textDiff,
-            currentSelectionEnd + textDiff
+            currentSelectionEnd + textDiff,
           )
-        : "0:0";
+        : '0:0';
 
     const platformCurrentSelectionKey = possibleNextSelectionKey;
     const newLineIndex = getCurrentLineIndex(
       platformCurrentSelectionKey,
-      newText
+      newText,
     );
 
     const lineDiff = newTextLines.length - currentTextLines.length;
@@ -242,7 +242,7 @@ export const useTextEditor = ({
         ? getClosestSelectionKey(
             textStyleMap,
             lastSelectionKey,
-            includeSelectionEnd
+            includeSelectionEnd,
           )
         : undefined;
 
@@ -282,7 +282,7 @@ export const useTextEditor = ({
             [currentLineIndex]: { $set: lineStyle },
           },
         },
-      })
+      }),
     );
   };
 
@@ -305,7 +305,7 @@ export const useTextEditor = ({
                 },
               },
             },
-          })
+          }),
         );
         return;
       }
@@ -337,7 +337,7 @@ export const useTextEditor = ({
                   },
                 },
               },
-            })
+            }),
           );
         } else {
           setIncludeSelectionEnd(false);
@@ -352,14 +352,36 @@ export const useTextEditor = ({
         update(currentInputBlockInfoMap, {
           [currentInputBlockKey]: {
             textStyleMap: {
-              [currentSelectionKey]: {
-                $apply: function (textStyles: TextStyle[] = []) {
-                  return [...textStyles, textStyle];
-                },
+              $apply: function (currentTextStyleMap: TextStyleMap = {}) {
+                const textStyles =
+                  currentTextStyleMap[currentSelectionKey] || [];
+
+                //'|Hey|****' => '**Hey|**'
+                const mergingSelectionKey = getClosestSelectionKey(
+                  currentTextStyleMap,
+                  currentSelectionKey,
+                  includeSelectionEnd,
+                );
+
+                if (mergingSelectionKey) {
+                  const {
+                    [mergingSelectionKey]: _, //eslint-disable-line
+                    ...filteredStyleMap
+                  } = currentTextStyleMap;
+                  return {
+                    ...filteredStyleMap,
+                    [currentSelectionKey]: [...textStyles, textStyle],
+                  };
+                }
+
+                return {
+                  ...currentTextStyleMap,
+                  [currentSelectionKey]: [...textStyles, textStyle],
+                };
               },
             },
           },
-        })
+        }),
       );
       return;
     }
@@ -388,7 +410,7 @@ export const useTextEditor = ({
               },
             },
           },
-        })
+        }),
       );
       return;
     }
@@ -402,7 +424,7 @@ export const useTextEditor = ({
           inputBlockInfoKey: currentInputBlockKey,
           imgUri,
         }),
-      })
+      }),
     );
   };
 
@@ -413,7 +435,7 @@ export const useTextEditor = ({
           inputBlockInfoMap: currentInputBlockInfoMap,
           inputBlockInfoKey,
         }),
-      })
+      }),
     );
   };
 

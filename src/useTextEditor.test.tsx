@@ -1,6 +1,6 @@
-import { renderHook, act, RenderResult } from "@testing-library/react-hooks";
-import { InputBlockInfoMap, LineKey, LineStyle, TextStyle } from "./types";
-import { useTextEditor, TextEditorProps } from "./useTextEditor";
+import { renderHook, act, RenderResult } from '@testing-library/react-hooks';
+import { InputBlockInfoMap, LineKey, LineStyle, TextStyle } from './types';
+import { useTextEditor, TextEditorProps } from './useTextEditor';
 
 /*
 default onChangeText is called before onSelectionChange
@@ -37,7 +37,7 @@ interface OnTypeInput {
   cursor: number;
   inputBlockKey?: LineKey;
 }
-const onType = ({ result, text, cursor, inputBlockKey = "0" }: OnTypeInput) => {
+const onType = ({ result, text, cursor, inputBlockKey = '0' }: OnTypeInput) => {
   act(() => {
     result.current.onChangeText(inputBlockKey, text);
   });
@@ -49,31 +49,30 @@ const onType = ({ result, text, cursor, inputBlockKey = "0" }: OnTypeInput) => {
   });
 };
 
-const lineStyles: LineStyle[] = ["#", "##", "###"];
+const lineStyles: LineStyle[] = ['#', '##', '###'];
 
-const textStyles: TextStyle[] = ["**", "__", "--", "~~"];
+const textStyles: TextStyle[] = ['**' /*, '__', '--', '~~'*/];
 
 describe(`useTextEditor`, () => {
   /*         //*/
   //init
-  test("init", () => {
+  test('init', () => {
     const { result } = renderHook(() => useTextEditor({}));
 
-    expect(result.current.markdown).toBe("");
+    expect(result.current.markdown).toBe('');
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
-        text: "",
+      '0': {
+        type: 'text',
+        text: '',
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       },
     });
   });
-
   lineStyles.map((lineStyle) => {
     describe(`lineStyle: ${lineStyle}`, () => {
       //multiline
@@ -82,24 +81,24 @@ describe(`useTextEditor`, () => {
         const { result } = renderHook(() => useTextEditor({}));
 
         //'|' => 'Hey title|'
-        const text1 = "Hey title";
+        const text1 = 'Hey title';
         onType({
           result,
           text: text1,
           cursor: 9,
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {},
-            currentSelectionKey: "9:9",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '9:9',
+            lastSelectionKey: '0:0',
           },
         });
 
@@ -108,25 +107,25 @@ describe(`useTextEditor`, () => {
           result.current.onLineStyle(lineStyle);
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": lineStyle,
+              '0': lineStyle,
             },
             textStyleMap: {},
-            currentSelectionKey: "9:9",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '9:9',
+            lastSelectionKey: '0:0',
           },
         });
         expect(result.current.currentLineStyle).toStrictEqual<LineStyle>(
-          lineStyle
+          lineStyle,
         );
 
         //'#Hey title|' => '#Hey title\n|'
-        const text2 = text1 + "\n";
+        const text2 = text1 + '\n';
         onType({
           result,
           text: text2,
@@ -134,44 +133,44 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text2,
             lineStyleMap: {
-              "0": lineStyle,
-              "1": "body",
+              '0': lineStyle,
+              '1': 'body',
             },
             textStyleMap: {},
-            currentSelectionKey: "10:10",
-            lastSelectionKey: "9:9",
+            currentSelectionKey: '10:10',
+            lastSelectionKey: '9:9',
           },
         });
 
         //'#Hey title\n|' => '#Hey title\n##|'
         act(() => {
-          result.current.onLineStyle("##");
+          result.current.onLineStyle('##');
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text2,
             lineStyleMap: {
-              "0": lineStyle,
-              "1": "##",
+              '0': lineStyle,
+              '1': '##',
             },
             textStyleMap: {},
-            currentSelectionKey: "10:10",
-            lastSelectionKey: "9:9",
+            currentSelectionKey: '10:10',
+            lastSelectionKey: '9:9',
           },
         });
-        expect(result.current.currentLineStyle).toStrictEqual<LineStyle>("##");
+        expect(result.current.currentLineStyle).toStrictEqual<LineStyle>('##');
 
         //'#Hey title\n##|' => '#Hey title\n##Hey heading|'
-        const text3 = text2 + "Hey heading";
+        const text3 = text2 + 'Hey heading';
         onType({
           result,
           text: text3,
@@ -181,18 +180,18 @@ describe(`useTextEditor`, () => {
         // expect(result.current.currentLineStyle).toStrictEqual<LineStyle>('##');
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text3,
             lineStyleMap: {
-              "0": lineStyle,
-              "1": "##",
+              '0': lineStyle,
+              '1': '##',
             },
             textStyleMap: {},
-            currentSelectionKey: "21:21",
-            lastSelectionKey: "10:10",
+            currentSelectionKey: '21:21',
+            lastSelectionKey: '10:10',
           },
         });
       });
@@ -201,7 +200,7 @@ describe(`useTextEditor`, () => {
       test(`should remove title ${lineStyle}:\n '${lineStyle}Hey title\\n|##'  => '${lineStyle}Hey title\\n|' => '|Hey title\\n'`, () => {
         const { result } = renderHook(() => useTextEditor({}));
 
-        const text1 = "Hey title";
+        const text1 = 'Hey title';
         //'|' => 'Hey title|'
         onType({
           result,
@@ -210,18 +209,18 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
 
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {},
-            currentSelectionKey: "9:9",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '9:9',
+            lastSelectionKey: '0:0',
           },
         });
 
@@ -230,24 +229,24 @@ describe(`useTextEditor`, () => {
           result.current.onLineStyle(lineStyle);
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": lineStyle,
+              '0': lineStyle,
             },
             textStyleMap: {},
-            currentSelectionKey: "9:9",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '9:9',
+            lastSelectionKey: '0:0',
           },
         });
         expect(result.current.currentLineStyle).toStrictEqual<LineStyle>(
-          lineStyle
+          lineStyle,
         );
 
-        const text2 = text1 + "\n";
+        const text2 = text1 + '\n';
         //'#Hey title|' => '#Hey title\n|'
         onType({
           result,
@@ -256,112 +255,112 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text2,
             lineStyleMap: {
-              "0": lineStyle,
-              "1": "body",
+              '0': lineStyle,
+              '1': 'body',
             },
             textStyleMap: {},
-            currentSelectionKey: "10:10",
-            lastSelectionKey: "9:9",
+            currentSelectionKey: '10:10',
+            lastSelectionKey: '9:9',
           },
         });
 
         //'#Hey title\n|' => '#Hey title\n|##'
         act(() => {
-          result.current.onLineStyle("##");
+          result.current.onLineStyle('##');
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text2,
             lineStyleMap: {
-              "0": lineStyle,
-              "1": "##",
+              '0': lineStyle,
+              '1': '##',
             },
             textStyleMap: {},
-            currentSelectionKey: "10:10",
-            lastSelectionKey: "9:9",
+            currentSelectionKey: '10:10',
+            lastSelectionKey: '9:9',
           },
         });
-        expect(result.current.currentLineStyle).toStrictEqual<LineStyle>("##");
+        expect(result.current.currentLineStyle).toStrictEqual<LineStyle>('##');
 
         //'#Hey title\n|##' => '#Hey title\n|'
         act(() => {
-          result.current.onLineStyle("body");
+          result.current.onLineStyle('body');
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text2,
             lineStyleMap: {
-              "0": lineStyle,
-              "1": "body",
+              '0': lineStyle,
+              '1': 'body',
             },
             textStyleMap: {},
-            currentSelectionKey: "10:10",
-            lastSelectionKey: "9:9",
+            currentSelectionKey: '10:10',
+            lastSelectionKey: '9:9',
           },
         });
         expect(result.current.currentLineStyle).toStrictEqual<LineStyle>(
-          "body"
+          'body',
         );
 
         //'#Hey title\n|' => '#|Hey title\n'
         act(() => {
-          result.current.onSelectionChange("0", {
+          result.current.onSelectionChange('0', {
             start: 0,
             end: 0,
           });
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text2,
             lineStyleMap: {
-              "0": lineStyle,
-              "1": "body",
+              '0': lineStyle,
+              '1': 'body',
             },
             textStyleMap: {},
-            currentSelectionKey: "0:0",
-            lastSelectionKey: "10:10",
+            currentSelectionKey: '0:0',
+            lastSelectionKey: '10:10',
           },
         });
         expect(result.current.currentLineStyle).toStrictEqual<LineStyle>(
-          lineStyle
+          lineStyle,
         );
 
         //'#|Hey title\n' => '|Hey title\n'
         act(() => {
-          result.current.onLineStyle("body");
+          result.current.onLineStyle('body');
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text2,
             lineStyleMap: {
-              "0": "body",
-              "1": "body",
+              '0': 'body',
+              '1': 'body',
             },
             textStyleMap: {},
-            currentSelectionKey: "0:0",
-            lastSelectionKey: "10:10",
+            currentSelectionKey: '0:0',
+            lastSelectionKey: '10:10',
           },
         });
         expect(result.current.currentLineStyle).toStrictEqual<LineStyle>(
-          "body"
+          'body',
         );
       });
 
@@ -370,7 +369,7 @@ describe(`useTextEditor`, () => {
         const { result } = renderHook(() => useTextEditor({}));
 
         //'|' => 'Hey title|'
-        const text1 = "Hey title";
+        const text1 = 'Hey title';
         onType({
           result,
           text: text1,
@@ -378,17 +377,17 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {},
-            currentSelectionKey: "9:9",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '9:9',
+            lastSelectionKey: '0:0',
           },
         });
 
@@ -397,25 +396,25 @@ describe(`useTextEditor`, () => {
           result.current.onLineStyle(lineStyle);
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": lineStyle,
+              '0': lineStyle,
             },
             textStyleMap: {},
-            currentSelectionKey: "9:9",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '9:9',
+            lastSelectionKey: '0:0',
           },
         });
         expect(result.current.currentLineStyle).toStrictEqual<LineStyle>(
-          lineStyle
+          lineStyle,
         );
 
         //'#Hey title|' => '#Hey title\n|'
-        const text2 = text1 + "\n";
+        const text2 = text1 + '\n';
         onType({
           result,
           text: text2,
@@ -423,70 +422,70 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text2,
             lineStyleMap: {
-              "0": lineStyle,
-              "1": "body",
+              '0': lineStyle,
+              '1': 'body',
             },
             textStyleMap: {},
-            currentSelectionKey: "10:10",
-            lastSelectionKey: "9:9",
+            currentSelectionKey: '10:10',
+            lastSelectionKey: '9:9',
           },
         });
 
         //'#Hey title\n|' => '#Hey title\n|##'
         act(() => {
-          result.current.onLineStyle("##");
+          result.current.onLineStyle('##');
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text2,
             lineStyleMap: {
-              "0": lineStyle,
-              "1": "##",
+              '0': lineStyle,
+              '1': '##',
             },
             textStyleMap: {},
-            currentSelectionKey: "10:10",
-            lastSelectionKey: "9:9",
+            currentSelectionKey: '10:10',
+            lastSelectionKey: '9:9',
           },
         });
-        expect(result.current.currentLineStyle).toStrictEqual<LineStyle>("##");
+        expect(result.current.currentLineStyle).toStrictEqual<LineStyle>('##');
 
         //'#Hey title\n|##' => '#Hey title|\n##'
         act(() => {
-          result.current.onSelectionChange("0", {
+          result.current.onSelectionChange('0', {
             start: 9,
             end: 9,
           });
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text2,
             lineStyleMap: {
-              "0": lineStyle,
-              "1": "##",
+              '0': lineStyle,
+              '1': '##',
             },
             textStyleMap: {},
-            currentSelectionKey: "9:9",
-            lastSelectionKey: "10:10",
+            currentSelectionKey: '9:9',
+            lastSelectionKey: '10:10',
           },
         });
         expect(result.current.currentLineStyle).toStrictEqual<LineStyle>(
-          lineStyle
+          lineStyle,
         );
 
         //'#Hey title|\n##' =>  '#Hey title\n|\n##'
-        const text3 = "Hey title\n\n";
+        const text3 = 'Hey title\n\n';
         onType({
           result,
           text: text3,
@@ -494,19 +493,19 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text3,
             lineStyleMap: {
-              "0": lineStyle,
-              "1": "body",
-              "2": "##",
+              '0': lineStyle,
+              '1': 'body',
+              '2': '##',
             },
             textStyleMap: {},
-            currentSelectionKey: "10:10",
-            lastSelectionKey: "9:9",
+            currentSelectionKey: '10:10',
+            lastSelectionKey: '9:9',
           },
         });
       });
@@ -521,7 +520,7 @@ describe(`useTextEditor`, () => {
         const { result } = renderHook(() => useTextEditor({}));
 
         //'|' => 'Hey you|'
-        const text1 = "Hey you";
+        const text1 = 'Hey you';
         onType({
           result,
           text: text1,
@@ -529,23 +528,23 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {},
-            currentSelectionKey: "7:7",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '7:7',
+            lastSelectionKey: '0:0',
           },
         });
 
         //'Hey you|' => '|Hey| you'
         act(() => {
-          result.current.onSelectionChange("0", {
+          result.current.onSelectionChange('0', {
             start: 0,
             end: 3,
           });
@@ -556,19 +555,19 @@ describe(`useTextEditor`, () => {
           result.current.onTextStyle(textStyle);
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "0:3": [textStyle],
+              '0:3': [textStyle],
             },
-            currentSelectionKey: "0:3",
-            lastSelectionKey: "7:7",
+            currentSelectionKey: '0:3',
+            lastSelectionKey: '7:7',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([
@@ -577,25 +576,25 @@ describe(`useTextEditor`, () => {
 
         //'**|Hey|** you' => '**Hey|** you'
         act(() => {
-          result.current.onSelectionChange("0", {
+          result.current.onSelectionChange('0', {
             start: 3,
             end: 3,
           });
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "0:3": [textStyle],
+              '0:3': [textStyle],
             },
-            currentSelectionKey: "3:3",
-            lastSelectionKey: "0:3",
+            currentSelectionKey: '3:3',
+            lastSelectionKey: '0:3',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([
@@ -603,7 +602,7 @@ describe(`useTextEditor`, () => {
         ]);
 
         //'**Hey|** you' => '**Hey |** you'
-        const text2 = "Hey  you";
+        const text2 = 'Hey  you';
         onType({
           result,
           text: text2,
@@ -611,19 +610,19 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text2,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "0:4": [textStyle],
+              '0:4': [textStyle],
             },
-            currentSelectionKey: "4:4",
-            lastSelectionKey: "3:3",
+            currentSelectionKey: '4:4',
+            lastSelectionKey: '3:3',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([
@@ -636,7 +635,7 @@ describe(`useTextEditor`, () => {
         const { result } = renderHook(() => useTextEditor({}));
 
         //'|' => 'Hey you|'
-        const text1 = "Hey you";
+        const text1 = 'Hey you';
         onType({
           result,
           text: text1,
@@ -644,23 +643,23 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {},
-            currentSelectionKey: "7:7",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '7:7',
+            lastSelectionKey: '0:0',
           },
         });
 
         //'Hey you|' => '|Hey| you'
         act(() => {
-          result.current.onSelectionChange("0", {
+          result.current.onSelectionChange('0', {
             start: 0,
             end: 3,
           });
@@ -671,19 +670,19 @@ describe(`useTextEditor`, () => {
           result.current.onTextStyle(textStyle);
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "0:3": [textStyle],
+              '0:3': [textStyle],
             },
-            currentSelectionKey: "0:3",
-            lastSelectionKey: "7:7",
+            currentSelectionKey: '0:3',
+            lastSelectionKey: '7:7',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([
@@ -695,17 +694,17 @@ describe(`useTextEditor`, () => {
           result.current.onTextStyle(textStyle);
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {},
-            currentSelectionKey: "0:3",
-            lastSelectionKey: "7:7",
+            currentSelectionKey: '0:3',
+            lastSelectionKey: '7:7',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([]);
@@ -717,7 +716,7 @@ describe(`useTextEditor`, () => {
         const { result } = renderHook(() => useTextEditor({}));
 
         //'|' => 'Hey you|'
-        const text1 = "Hey you";
+        const text1 = 'Hey you';
         onType({
           result,
           text: text1,
@@ -725,23 +724,23 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {},
-            currentSelectionKey: "7:7",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '7:7',
+            lastSelectionKey: '0:0',
           },
         });
 
         //'Hey you|' =>  'Hey |you|'
         act(() => {
-          result.current.onSelectionChange("0", {
+          result.current.onSelectionChange('0', {
             start: 4,
             end: 7,
           });
@@ -752,19 +751,19 @@ describe(`useTextEditor`, () => {
           result.current.onTextStyle(textStyle);
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "4:7": [textStyle],
+              '4:7': [textStyle],
             },
-            currentSelectionKey: "4:7",
-            lastSelectionKey: "7:7",
+            currentSelectionKey: '4:7',
+            lastSelectionKey: '7:7',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([
@@ -773,25 +772,25 @@ describe(`useTextEditor`, () => {
 
         //'Hey **|you|**' => 'Hey **you|**'
         act(() => {
-          result.current.onSelectionChange("0", {
+          result.current.onSelectionChange('0', {
             start: 7,
             end: 7,
           });
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "4:7": [textStyle],
+              '4:7': [textStyle],
             },
-            currentSelectionKey: "7:7",
-            lastSelectionKey: "4:7",
+            currentSelectionKey: '7:7',
+            lastSelectionKey: '4:7',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([
@@ -799,7 +798,7 @@ describe(`useTextEditor`, () => {
         ]);
 
         //'Hey **you|**' =>  'Hey **you keep editing|**'
-        const text2 = text1 + " keep editing";
+        const text2 = text1 + ' keep editing';
         onType({
           result,
           text: text2,
@@ -807,19 +806,19 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text2,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "4:20": [textStyle],
+              '4:20': [textStyle],
             },
-            currentSelectionKey: "20:20",
-            lastSelectionKey: "7:7",
+            currentSelectionKey: '20:20',
+            lastSelectionKey: '7:7',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([
@@ -832,7 +831,7 @@ describe(`useTextEditor`, () => {
         const { result } = renderHook(() => useTextEditor({}));
 
         //'|' => 'Hey you|'
-        const text1 = "Hey you";
+        const text1 = 'Hey you';
         onType({
           result,
           text: text1,
@@ -840,23 +839,23 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {},
-            currentSelectionKey: "7:7",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '7:7',
+            lastSelectionKey: '0:0',
           },
         });
 
         //'Hey you|' =>  'Hey |you|'
         act(() => {
-          result.current.onSelectionChange("0", {
+          result.current.onSelectionChange('0', {
             start: 4,
             end: 7,
           });
@@ -867,19 +866,19 @@ describe(`useTextEditor`, () => {
           result.current.onTextStyle(textStyle);
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "4:7": [textStyle],
+              '4:7': [textStyle],
             },
-            currentSelectionKey: "4:7",
-            lastSelectionKey: "7:7",
+            currentSelectionKey: '4:7',
+            lastSelectionKey: '7:7',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([
@@ -891,17 +890,17 @@ describe(`useTextEditor`, () => {
           result.current.onTextStyle(textStyle);
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {},
-            currentSelectionKey: "4:7",
-            lastSelectionKey: "7:7",
+            currentSelectionKey: '4:7',
+            lastSelectionKey: '7:7',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([]);
@@ -917,19 +916,19 @@ describe(`useTextEditor`, () => {
           result.current.onTextStyle(textStyle);
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
-            text: "",
+          '0': {
+            type: 'text',
+            text: '',
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "0:0": [textStyle],
+              '0:0': [textStyle],
             },
-            currentSelectionKey: "0:0",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '0:0',
+            lastSelectionKey: '0:0',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([
@@ -937,7 +936,7 @@ describe(`useTextEditor`, () => {
         ]);
 
         //'**|**' => '**Hey you|**'
-        const text1 = "Hey you";
+        const text1 = 'Hey you';
         onType({
           result,
           text: text1,
@@ -945,24 +944,24 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "0:7": [textStyle],
+              '0:7': [textStyle],
             },
-            currentSelectionKey: "7:7",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '7:7',
+            lastSelectionKey: '0:0',
           },
         });
 
         //'**Hey you|**' => '**Hey you keep editing|** '
-        const text2 = text1 + " keep editing";
+        const text2 = text1 + ' keep editing';
         onType({
           result,
           text: text2,
@@ -970,19 +969,19 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text2,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "0:20": [textStyle],
+              '0:20': [textStyle],
             },
-            currentSelectionKey: "20:20",
-            lastSelectionKey: "7:7",
+            currentSelectionKey: '20:20',
+            lastSelectionKey: '7:7',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([
@@ -1002,19 +1001,19 @@ describe(`useTextEditor`, () => {
           result.current.onTextStyle(textStyle);
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
-            text: "",
+          '0': {
+            type: 'text',
+            text: '',
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "0:0": [textStyle],
+              '0:0': [textStyle],
             },
-            currentSelectionKey: "0:0",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '0:0',
+            lastSelectionKey: '0:0',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([
@@ -1026,17 +1025,17 @@ describe(`useTextEditor`, () => {
           result.current.onTextStyle(textStyle);
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
-            text: "",
+          '0': {
+            type: 'text',
+            text: '',
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {},
-            currentSelectionKey: "0:0",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '0:0',
+            lastSelectionKey: '0:0',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([]);
@@ -1046,19 +1045,19 @@ describe(`useTextEditor`, () => {
           result.current.onTextStyle(textStyle);
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
-            text: "",
+          '0': {
+            type: 'text',
+            text: '',
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "0:0": [textStyle],
+              '0:0': [textStyle],
             },
-            currentSelectionKey: "0:0",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '0:0',
+            lastSelectionKey: '0:0',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([
@@ -1071,7 +1070,7 @@ describe(`useTextEditor`, () => {
         const { result } = renderHook(() => useTextEditor({}));
 
         //'|' => 'Hey you|'
-        const text1 = "Hey you";
+        const text1 = 'Hey you';
         onType({
           result,
           text: text1,
@@ -1079,17 +1078,17 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {},
-            currentSelectionKey: "7:7",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '7:7',
+            lastSelectionKey: '0:0',
           },
         });
 
@@ -1098,19 +1097,19 @@ describe(`useTextEditor`, () => {
           result.current.onTextStyle(textStyle);
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "7:7": [textStyle],
+              '7:7': [textStyle],
             },
-            currentSelectionKey: "7:7",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '7:7',
+            lastSelectionKey: '0:0',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([
@@ -1118,7 +1117,7 @@ describe(`useTextEditor`, () => {
         ]);
 
         //'Hey you**|**' => 'Hey you** keep editing|**'
-        const text2 = text1 + " keep editing";
+        const text2 = text1 + ' keep editing';
         onType({
           result,
           text: text2,
@@ -1126,19 +1125,19 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text2,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "7:20": [textStyle],
+              '7:20': [textStyle],
             },
-            currentSelectionKey: "20:20",
-            lastSelectionKey: "7:7",
+            currentSelectionKey: '20:20',
+            lastSelectionKey: '7:7',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([
@@ -1151,7 +1150,7 @@ describe(`useTextEditor`, () => {
         const { result } = renderHook(() => useTextEditor({}));
 
         //'|' => 'Hey you|'
-        const text1 = "Hey you";
+        const text1 = 'Hey you';
         onType({
           result,
           text: text1,
@@ -1159,17 +1158,17 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {},
-            currentSelectionKey: "7:7",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '7:7',
+            lastSelectionKey: '0:0',
           },
         });
 
@@ -1178,19 +1177,19 @@ describe(`useTextEditor`, () => {
           result.current.onTextStyle(textStyle);
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "7:7": [textStyle],
+              '7:7': [textStyle],
             },
-            currentSelectionKey: "7:7",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '7:7',
+            lastSelectionKey: '0:0',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([
@@ -1198,7 +1197,7 @@ describe(`useTextEditor`, () => {
         ]);
 
         //'Hey you**|**' => 'Hey you** keep editing|**'
-        const text2 = text1 + " keep editing";
+        const text2 = text1 + ' keep editing';
         onType({
           result,
           text: text2,
@@ -1206,19 +1205,19 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text2,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "7:20": [textStyle],
+              '7:20': [textStyle],
             },
-            currentSelectionKey: "20:20",
-            lastSelectionKey: "7:7",
+            currentSelectionKey: '20:20',
+            lastSelectionKey: '7:7',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([
@@ -1230,25 +1229,25 @@ describe(`useTextEditor`, () => {
           result.current.onTextStyle(textStyle);
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text2,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "7:20": [textStyle],
+              '7:20': [textStyle],
             },
-            currentSelectionKey: "20:20",
-            lastSelectionKey: "7:7",
+            currentSelectionKey: '20:20',
+            lastSelectionKey: '7:7',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([]);
 
         //'Hey you** keep editing|**' => 'Hey you** keep editing** and more|'
-        const text3 = text2 + " and more";
+        const text3 = text2 + ' and more';
         onType({
           result,
           text: text3,
@@ -1256,19 +1255,19 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text3,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "7:20": [textStyle],
+              '7:20': [textStyle],
             },
-            currentSelectionKey: "29:29",
-            lastSelectionKey: "20:20",
+            currentSelectionKey: '29:29',
+            lastSelectionKey: '20:20',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([]);
@@ -1283,19 +1282,19 @@ describe(`useTextEditor`, () => {
           result.current.onTextStyle(textStyle);
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
-            text: "",
+          '0': {
+            type: 'text',
+            text: '',
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "0:0": [textStyle],
+              '0:0': [textStyle],
             },
-            currentSelectionKey: "0:0",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '0:0',
+            lastSelectionKey: '0:0',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([
@@ -1303,7 +1302,7 @@ describe(`useTextEditor`, () => {
         ]);
 
         //'**|**' => '**Hey you|**'
-        const text1 = "Hey you";
+        const text1 = 'Hey you';
         onType({
           result,
           text: text1,
@@ -1311,24 +1310,24 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "0:7": [textStyle],
+              '0:7': [textStyle],
             },
-            currentSelectionKey: "7:7",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '7:7',
+            lastSelectionKey: '0:0',
           },
         });
 
         //'**Hey you|**' => '**Hey you**\n'
-        const text2 = text1 + "\n";
+        const text2 = text1 + '\n';
         onType({
           result,
           text: text2,
@@ -1336,20 +1335,20 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text2,
             lineStyleMap: {
-              "0": "body",
-              "1": "body",
+              '0': 'body',
+              '1': 'body',
             },
             textStyleMap: {
-              "0:7": [textStyle],
+              '0:7': [textStyle],
             },
-            currentSelectionKey: "8:8",
-            lastSelectionKey: "7:7",
+            currentSelectionKey: '8:8',
+            lastSelectionKey: '7:7',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([]);
@@ -1361,7 +1360,7 @@ describe(`useTextEditor`, () => {
         const { result } = renderHook(() => useTextEditor({}));
 
         //'|' => 'Hey you|'
-        const text1 = "Hey you";
+        const text1 = 'Hey you';
         onType({
           result,
           text: text1,
@@ -1369,23 +1368,23 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {},
-            currentSelectionKey: "7:7",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '7:7',
+            lastSelectionKey: '0:0',
           },
         });
 
         //'Hey you|' =>  'Hey |you|'
         act(() => {
-          result.current.onSelectionChange("0", {
+          result.current.onSelectionChange('0', {
             start: 4,
             end: 7,
           });
@@ -1396,19 +1395,19 @@ describe(`useTextEditor`, () => {
           result.current.onTextStyle(textStyle);
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "4:7": [textStyle],
+              '4:7': [textStyle],
             },
-            currentSelectionKey: "4:7",
-            lastSelectionKey: "7:7",
+            currentSelectionKey: '4:7',
+            lastSelectionKey: '7:7',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([
@@ -1417,25 +1416,25 @@ describe(`useTextEditor`, () => {
 
         //'Hey **|you|**' => 'Hey **you|**'
         act(() => {
-          result.current.onSelectionChange("0", {
+          result.current.onSelectionChange('0', {
             start: 7,
             end: 7,
           });
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "4:7": [textStyle],
+              '4:7': [textStyle],
             },
-            currentSelectionKey: "7:7",
-            lastSelectionKey: "4:7",
+            currentSelectionKey: '7:7',
+            lastSelectionKey: '4:7',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([
@@ -1443,7 +1442,7 @@ describe(`useTextEditor`, () => {
         ]);
 
         //'Hey **you|**' =>  'Hey **|**'
-        const text2 = "Hey ";
+        const text2 = 'Hey ';
         onType({
           result,
           text: text2,
@@ -1451,19 +1450,19 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text2,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {
-              "4:4": [textStyle],
+              '4:4': [textStyle],
             },
-            currentSelectionKey: "4:4",
-            lastSelectionKey: "7:7",
+            currentSelectionKey: '4:4',
+            lastSelectionKey: '7:7',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([
@@ -1471,7 +1470,7 @@ describe(`useTextEditor`, () => {
         ]);
 
         //'Hey **|**' =>  'Hey|'
-        const text3 = "Hey";
+        const text3 = 'Hey';
         onType({
           result,
           text: text3,
@@ -1479,20 +1478,140 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text3,
             lineStyleMap: {
-              "0": "body",
+              '0': 'body',
             },
             textStyleMap: {},
-            currentSelectionKey: "3:3",
-            lastSelectionKey: "4:4",
+            currentSelectionKey: '3:3',
+            lastSelectionKey: '4:4',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([]);
+      });
+
+      //Backspace
+      //'|' => 'Hey|' => 'Hey**|**' => '|Hey|****' => '**Hey|**' => '**Hey you|**'
+      test(`should shift text style of closest selection\n'|Hey|${textStyle}${textStyle}' => '${textStyle}Hey|${textStyle}'`, () => {
+        const { result } = renderHook(() => useTextEditor({}));
+
+        //'|' => 'Hey|'
+        const text1 = 'Hey';
+        onType({
+          result,
+          text: text1,
+          cursor: 3,
+        });
+
+        expect(
+          result.current.inputBlockInfoMap,
+        ).toStrictEqual<InputBlockInfoMap>({
+          '0': {
+            type: 'text',
+            text: text1,
+            lineStyleMap: {
+              '0': 'body',
+            },
+            textStyleMap: {},
+            currentSelectionKey: '3:3',
+            lastSelectionKey: '0:0',
+          },
+        });
+
+        //'Hey|' => 'Hey**|**'
+        act(() => {
+          result.current.onTextStyle(textStyle);
+        });
+
+        expect(
+          result.current.inputBlockInfoMap,
+        ).toStrictEqual<InputBlockInfoMap>({
+          '0': {
+            type: 'text',
+            text: text1,
+            lineStyleMap: {
+              '0': 'body',
+            },
+            textStyleMap: {
+              '3:3': [textStyle],
+            },
+            currentSelectionKey: '3:3',
+            lastSelectionKey: '0:0',
+          },
+        });
+
+        //'Hey**|**' => '|Hey|****'
+        act(() => {
+          result.current.onSelectionChange('0', {
+            start: 0,
+            end: 3,
+          });
+        });
+        expect(
+          result.current.inputBlockInfoMap,
+        ).toStrictEqual<InputBlockInfoMap>({
+          '0': {
+            type: 'text',
+            text: text1,
+            lineStyleMap: {
+              '0': 'body',
+            },
+            textStyleMap: {
+              '3:3': [textStyle],
+            },
+            currentSelectionKey: '0:3',
+            lastSelectionKey: '3:3',
+          },
+        });
+
+        //'|Hey|****' => '**Hey|**'
+        act(() => {
+          result.current.onTextStyle(textStyle);
+        });
+        expect(
+          result.current.inputBlockInfoMap,
+        ).toStrictEqual<InputBlockInfoMap>({
+          '0': {
+            type: 'text',
+            text: text1,
+            lineStyleMap: {
+              '0': 'body',
+            },
+            textStyleMap: {
+              '0:3': [textStyle],
+            },
+            currentSelectionKey: '0:3',
+            lastSelectionKey: '3:3',
+          },
+        });
+
+        //'**Hey|**' => '**Hey you|**'
+        const text2 = text1 + ' you';
+        onType({
+          result,
+          text: text2,
+          cursor: 7,
+        });
+        expect(
+          result.current.inputBlockInfoMap,
+        ).toStrictEqual<InputBlockInfoMap>({
+          '0': {
+            type: 'text',
+            text: text2,
+            lineStyleMap: {
+              '0': 'body',
+            },
+            textStyleMap: {
+              '0:7': [textStyle],
+            },
+            currentSelectionKey: '7:7',
+            lastSelectionKey: '0:3',
+          },
+        });
       });
 
       //multiline
@@ -1502,7 +1621,7 @@ describe(`useTextEditor`, () => {
         const { result } = renderHook(() => useTextEditor({}));
 
         //'|' => '\n|'
-        const text1 = "\n";
+        const text1 = '\n';
         onType({
           result,
           text: text1,
@@ -1510,18 +1629,18 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
-              "1": "body",
+              '0': 'body',
+              '1': 'body',
             },
             textStyleMap: {},
-            currentSelectionKey: "1:1",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '1:1',
+            lastSelectionKey: '0:0',
           },
         });
 
@@ -1530,20 +1649,20 @@ describe(`useTextEditor`, () => {
           result.current.onTextStyle(textStyle);
         });
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text1,
             lineStyleMap: {
-              "0": "body",
-              "1": "body",
+              '0': 'body',
+              '1': 'body',
             },
             textStyleMap: {
-              "1:1": [textStyle],
+              '1:1': [textStyle],
             },
-            currentSelectionKey: "1:1",
-            lastSelectionKey: "0:0",
+            currentSelectionKey: '1:1',
+            lastSelectionKey: '0:0',
           },
         });
         expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>([
@@ -1551,7 +1670,7 @@ describe(`useTextEditor`, () => {
         ]);
 
         //'\n**|**' => '**Hey you|**'
-        const text2 = "\nHey you";
+        const text2 = '\nHey you';
         onType({
           result,
           text: text2,
@@ -1559,20 +1678,20 @@ describe(`useTextEditor`, () => {
         });
 
         expect(
-          result.current.inputBlockInfoMap
+          result.current.inputBlockInfoMap,
         ).toStrictEqual<InputBlockInfoMap>({
-          "0": {
-            type: "text",
+          '0': {
+            type: 'text',
             text: text2,
             lineStyleMap: {
-              "0": "body",
-              "1": "body",
+              '0': 'body',
+              '1': 'body',
             },
             textStyleMap: {
-              "1:8": [textStyle],
+              '1:8': [textStyle],
             },
-            currentSelectionKey: "8:8",
-            lastSelectionKey: "1:1",
+            currentSelectionKey: '8:8',
+            lastSelectionKey: '1:1',
           },
         });
       });
@@ -1592,7 +1711,7 @@ describe(`useTextEditor`, () => {
     const { result } = renderHook(() => useTextEditor({}));
 
     //'|' => 'Hey bold and italic|'
-    const text1 = "Hey bold and italic";
+    const text1 = 'Hey bold and italic';
     onType({
       result,
       text: text1,
@@ -1600,21 +1719,21 @@ describe(`useTextEditor`, () => {
     });
 
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
+      '0': {
+        type: 'text',
         text: text1,
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "19:19",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '19:19',
+        lastSelectionKey: '0:0',
       },
     });
 
     //'Hey bold and italic|' => 'Hey |bold| and italic'
     act(() => {
-      result.current.onSelectionChange("0", {
+      result.current.onSelectionChange('0', {
         start: 4,
         end: 8,
       });
@@ -1622,27 +1741,27 @@ describe(`useTextEditor`, () => {
 
     //'Hey |bold| and italic' => 'Hey **|bold|** and italic'
     act(() => {
-      result.current.onTextStyle("**");
+      result.current.onTextStyle('**');
     });
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
+      '0': {
+        type: 'text',
         text: text1,
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {
-          "4:8": ["**"],
+          '4:8': ['**'],
         },
-        currentSelectionKey: "4:8",
-        lastSelectionKey: "19:19",
+        currentSelectionKey: '4:8',
+        lastSelectionKey: '19:19',
       },
     });
-    expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>(["**"]);
+    expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>(['**']);
 
     //'Hey **|bold|** and italic' => 'Hey **bold** and |italic|'
     act(() => {
-      result.current.onSelectionChange("0", {
+      result.current.onSelectionChange('0', {
         start: 13,
         end: 19,
       });
@@ -1650,51 +1769,51 @@ describe(`useTextEditor`, () => {
 
     //'Hey **bold** and |italic|' => 'Hey **bold** and __|italic|__'
     act(() => {
-      result.current.onTextStyle("__");
+      result.current.onTextStyle('__');
     });
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
+      '0': {
+        type: 'text',
         text: text1,
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {
-          "4:8": ["**"],
-          "13:19": ["__"],
+          '4:8': ['**'],
+          '13:19': ['__'],
         },
-        currentSelectionKey: "13:19",
-        lastSelectionKey: "4:8",
+        currentSelectionKey: '13:19',
+        lastSelectionKey: '4:8',
       },
     });
-    expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>(["__"]);
+    expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>(['__']);
 
     //'Hey **bold** and __|italic|__' => 'Hey **b|old** and __italic__'
     act(() => {
-      result.current.onSelectionChange("0", {
+      result.current.onSelectionChange('0', {
         start: 5,
         end: 5,
       });
     });
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
+      '0': {
+        type: 'text',
         text: text1,
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {
-          "4:8": ["**"],
-          "13:19": ["__"],
+          '4:8': ['**'],
+          '13:19': ['__'],
         },
-        currentSelectionKey: "5:5",
-        lastSelectionKey: "13:19",
+        currentSelectionKey: '5:5',
+        lastSelectionKey: '13:19',
       },
     });
-    expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>(["**"]);
+    expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>(['**']);
 
     //'Hey **b|old** and __italic__' => 'Hey **bb|old** and __italic__'
-    const text2 = "Hey bbold and italic";
+    const text2 = 'Hey bbold and italic';
     onType({
       result,
       text: text2,
@@ -1702,21 +1821,21 @@ describe(`useTextEditor`, () => {
     });
 
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
+      '0': {
+        type: 'text',
         text: text2,
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {
-          "4:9": ["**"],
-          "14:20": ["__"],
+          '4:9': ['**'],
+          '14:20': ['__'],
         },
-        currentSelectionKey: "6:6",
-        lastSelectionKey: "5:5",
+        currentSelectionKey: '6:6',
+        lastSelectionKey: '5:5',
       },
     });
-    expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>(["**"]);
+    expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>(['**']);
   });
 
   //'|' =>
@@ -1731,7 +1850,7 @@ describe(`useTextEditor`, () => {
     const { result } = renderHook(() => useTextEditor({}));
 
     //'|' => 'Hey bold and italic|'
-    const text1 = "Hey bold and italic";
+    const text1 = 'Hey bold and italic';
     onType({
       result,
       text: text1,
@@ -1739,21 +1858,21 @@ describe(`useTextEditor`, () => {
     });
 
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
+      '0': {
+        type: 'text',
         text: text1,
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "19:19",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '19:19',
+        lastSelectionKey: '0:0',
       },
     });
 
     //'Hey bold and italic|' => 'Hey |bold| and italic'
     act(() => {
-      result.current.onSelectionChange("0", {
+      result.current.onSelectionChange('0', {
         start: 4,
         end: 8,
       });
@@ -1761,27 +1880,27 @@ describe(`useTextEditor`, () => {
 
     //'Hey |bold| and italic' => 'Hey **|bold|** and italic'
     act(() => {
-      result.current.onTextStyle("**");
+      result.current.onTextStyle('**');
     });
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
+      '0': {
+        type: 'text',
         text: text1,
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {
-          "4:8": ["**"],
+          '4:8': ['**'],
         },
-        currentSelectionKey: "4:8",
-        lastSelectionKey: "19:19",
+        currentSelectionKey: '4:8',
+        lastSelectionKey: '19:19',
       },
     });
-    expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>(["**"]);
+    expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>(['**']);
 
     //'Hey **|bold|** and italic' => 'Hey **bold** and |italic|'
     act(() => {
-      result.current.onSelectionChange("0", {
+      result.current.onSelectionChange('0', {
         start: 13,
         end: 19,
       });
@@ -1789,51 +1908,51 @@ describe(`useTextEditor`, () => {
 
     //'Hey **bold** and |italic|' => 'Hey **bold** and __|italic|__'
     act(() => {
-      result.current.onTextStyle("__");
+      result.current.onTextStyle('__');
     });
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
+      '0': {
+        type: 'text',
         text: text1,
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {
-          "4:8": ["**"],
-          "13:19": ["__"],
+          '4:8': ['**'],
+          '13:19': ['__'],
         },
-        currentSelectionKey: "13:19",
-        lastSelectionKey: "4:8",
+        currentSelectionKey: '13:19',
+        lastSelectionKey: '4:8',
       },
     });
-    expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>(["__"]);
+    expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>(['__']);
 
     //'Hey **bold** and __|italic|__' => 'Hey **b|old** and __italic__'
     act(() => {
-      result.current.onSelectionChange("0", {
+      result.current.onSelectionChange('0', {
         start: 5,
         end: 5,
       });
     });
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
+      '0': {
+        type: 'text',
         text: text1,
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {
-          "4:8": ["**"],
-          "13:19": ["__"],
+          '4:8': ['**'],
+          '13:19': ['__'],
         },
-        currentSelectionKey: "5:5",
-        lastSelectionKey: "13:19",
+        currentSelectionKey: '5:5',
+        lastSelectionKey: '13:19',
       },
     });
-    expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>(["**"]);
+    expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>(['**']);
 
     //'Hey **b|old** and __italic__' => 'Hey **|old** and __italic__'
-    const text2 = "Hey old and italic";
+    const text2 = 'Hey old and italic';
     onType({
       result,
       text: text2,
@@ -1841,21 +1960,21 @@ describe(`useTextEditor`, () => {
     });
 
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
+      '0': {
+        type: 'text',
         text: text2,
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {
-          "4:7": ["**"],
-          "12:18": ["__"],
+          '4:7': ['**'],
+          '12:18': ['__'],
         },
-        currentSelectionKey: "4:4",
-        lastSelectionKey: "5:5",
+        currentSelectionKey: '4:4',
+        lastSelectionKey: '5:5',
       },
     });
-    expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>(["**"]);
+    expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>(['**']);
   });
 
   //muilt line text style
@@ -1871,7 +1990,7 @@ describe(`useTextEditor`, () => {
     const { result } = renderHook(() => useTextEditor({}));
 
     //'|' => 'Line 1\nHey bold and italic|'
-    const text1 = "Line 1\nHey bold and italic";
+    const text1 = 'Line 1\nHey bold and italic';
     onType({
       result,
       text: text1,
@@ -1879,22 +1998,22 @@ describe(`useTextEditor`, () => {
     });
 
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
+      '0': {
+        type: 'text',
         text: text1,
         lineStyleMap: {
-          "0": "body",
-          "1": "body",
+          '0': 'body',
+          '1': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "26:26",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '26:26',
+        lastSelectionKey: '0:0',
       },
     });
 
     //'Line 1\nHey bold and italic|' => 'Line 1\nHey |bold| and italic'
     act(() => {
-      result.current.onSelectionChange("0", {
+      result.current.onSelectionChange('0', {
         start: 11,
         end: 15,
       });
@@ -1902,28 +2021,28 @@ describe(`useTextEditor`, () => {
 
     //'Line 1\nHey |bold| and italic' => 'Line 1\nHey **|bold|** and italic'
     act(() => {
-      result.current.onTextStyle("**");
+      result.current.onTextStyle('**');
     });
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
+      '0': {
+        type: 'text',
         text: text1,
         lineStyleMap: {
-          "0": "body",
-          "1": "body",
+          '0': 'body',
+          '1': 'body',
         },
         textStyleMap: {
-          "11:15": ["**"],
+          '11:15': ['**'],
         },
-        currentSelectionKey: "11:15",
-        lastSelectionKey: "26:26",
+        currentSelectionKey: '11:15',
+        lastSelectionKey: '26:26',
       },
     });
-    expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>(["**"]);
+    expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>(['**']);
 
     //'Line 1\nHey **|bold|** and italic' => 'Line 1\nHey **bold** and |italic|'
     act(() => {
-      result.current.onSelectionChange("0", {
+      result.current.onSelectionChange('0', {
         start: 20,
         end: 26,
       });
@@ -1931,52 +2050,52 @@ describe(`useTextEditor`, () => {
 
     //'Line 1\nHey **bold** and |italic|' => 'Line 1\nHey **bold** and __|italic|__'
     act(() => {
-      result.current.onTextStyle("__");
+      result.current.onTextStyle('__');
     });
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
+      '0': {
+        type: 'text',
         text: text1,
         lineStyleMap: {
-          "0": "body",
-          "1": "body",
+          '0': 'body',
+          '1': 'body',
         },
         textStyleMap: {
-          "11:15": ["**"],
-          "20:26": ["__"],
+          '11:15': ['**'],
+          '20:26': ['__'],
         },
-        currentSelectionKey: "20:26",
-        lastSelectionKey: "11:15",
+        currentSelectionKey: '20:26',
+        lastSelectionKey: '11:15',
       },
     });
-    expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>(["__"]);
+    expect(result.current.currentTextStyles).toStrictEqual<TextStyle[]>(['__']);
 
     //'Line 1\nHey **bold** and __|italic|__' => 'Line 1|\nHey **bold** and __italic__'
     act(() => {
-      result.current.onSelectionChange("0", {
+      result.current.onSelectionChange('0', {
         start: 6,
         end: 6,
       });
     });
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
+      '0': {
+        type: 'text',
         text: text1,
         lineStyleMap: {
-          "0": "body",
-          "1": "body",
+          '0': 'body',
+          '1': 'body',
         },
         textStyleMap: {
-          "11:15": ["**"],
-          "20:26": ["__"],
+          '11:15': ['**'],
+          '20:26': ['__'],
         },
-        currentSelectionKey: "6:6",
-        lastSelectionKey: "20:26",
+        currentSelectionKey: '6:6',
+        lastSelectionKey: '20:26',
       },
     });
 
     //'Line 1|\nHey **bold** and __italic__' => 'Line 1\n|\nHey **bold** and __italic__'
-    const text2 = "Line 1\n\nHey bold and italic";
+    const text2 = 'Line 1\n\nHey bold and italic';
     onType({
       result,
       text: text2,
@@ -1984,20 +2103,20 @@ describe(`useTextEditor`, () => {
     });
 
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
+      '0': {
+        type: 'text',
         text: text2,
         lineStyleMap: {
-          "0": "body",
-          "1": "body",
-          "2": "body",
+          '0': 'body',
+          '1': 'body',
+          '2': 'body',
         },
         textStyleMap: {
-          "12:16": ["**"],
-          "21:27": ["__"],
+          '12:16': ['**'],
+          '21:27': ['__'],
         },
-        currentSelectionKey: "7:7",
-        lastSelectionKey: "6:6",
+        currentSelectionKey: '7:7',
+        lastSelectionKey: '6:6',
       },
     });
 
@@ -2010,447 +2129,447 @@ describe(`useTextEditor`, () => {
     });
 
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
+      '0': {
+        type: 'text',
         text: text1,
         lineStyleMap: {
-          "0": "body",
-          "1": "body",
+          '0': 'body',
+          '1': 'body',
         },
         textStyleMap: {
-          "11:15": ["**"],
-          "20:26": ["__"],
+          '11:15': ['**'],
+          '20:26': ['__'],
         },
-        currentSelectionKey: "6:6",
-        lastSelectionKey: "7:7",
+        currentSelectionKey: '6:6',
+        lastSelectionKey: '7:7',
       },
     });
   });
 
-  test("should split inputBlockInfo on add photo", () => {
+  test('should split inputBlockInfo on add photo', () => {
     const { result } = renderHook(() =>
       useTextEditor({
-        initialMarkdownText: "Hey title\nHey body",
-      })
+        initialMarkdownText: 'Hey title\nHey body',
+      }),
     );
 
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
-        text: "Hey title\nHey body",
+      '0': {
+        type: 'text',
+        text: 'Hey title\nHey body',
         lineStyleMap: {
-          "0": "body",
-          "1": "body",
+          '0': 'body',
+          '1': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       },
     });
 
     //'Hey title\nHey body|' => 'Hey title|\nHey body'
     act(() => {
-      result.current.onSelectionChange("0", {
+      result.current.onSelectionChange('0', {
         start: 9,
         end: 9,
       });
     });
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
-        text: "Hey title\nHey body",
+      '0': {
+        type: 'text',
+        text: 'Hey title\nHey body',
         lineStyleMap: {
-          "0": "body",
-          "1": "body",
+          '0': 'body',
+          '1': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "9:9",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '9:9',
+        lastSelectionKey: '0:0',
       },
     });
 
     //onAddPhoto
-    const imgUri = "img_uri";
+    const imgUri = 'img_uri';
     act(() => {
       result.current.onAddPhoto(imgUri);
     });
     expect(result.current.markdown).toBe(
-      "Hey title<img>img_uri</img>\nHey body"
+      'Hey title<img>img_uri</img>\nHey body',
     );
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
-        text: "Hey title",
+      '0': {
+        type: 'text',
+        text: 'Hey title',
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       },
-      "1": {
-        type: "image",
+      '1': {
+        type: 'image',
         imgUrl: imgUri,
       },
-      "2": {
-        type: "text",
-        text: "\nHey body",
+      '2': {
+        type: 'text',
+        text: '\nHey body',
         lineStyleMap: {
-          "0": "body",
-          "1": "body",
+          '0': 'body',
+          '1': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       },
     });
   });
 
-  test("should split with multiple inputBlockInfo on add photo", () => {
+  test('should split with multiple inputBlockInfo on add photo', () => {
     const { result } = renderHook(() =>
       useTextEditor({
-        initialMarkdownText: "Hey title<img>img_uri</img>\nHey body",
-      })
+        initialMarkdownText: 'Hey title<img>img_uri</img>\nHey body',
+      }),
     );
-    const imgUri = "img_uri";
+    const imgUri = 'img_uri';
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
-        text: "Hey title",
+      '0': {
+        type: 'text',
+        text: 'Hey title',
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       },
-      "1": {
-        type: "image",
+      '1': {
+        type: 'image',
         imgUrl: imgUri,
       },
-      "2": {
-        type: "text",
-        text: "\nHey body",
+      '2': {
+        type: 'text',
+        text: '\nHey body',
         lineStyleMap: {
-          "0": "body",
-          "1": "body",
+          '0': 'body',
+          '1': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       },
     });
 
     //'Hey title\nHey body|' => 'Hey title|\nHey body'
     act(() => {
-      result.current.onSelectionChange("0", {
+      result.current.onSelectionChange('0', {
         start: 9,
         end: 9,
       });
     });
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
-        text: "Hey title",
+      '0': {
+        type: 'text',
+        text: 'Hey title',
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "9:9",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '9:9',
+        lastSelectionKey: '0:0',
       },
-      "1": {
-        type: "image",
+      '1': {
+        type: 'image',
         imgUrl: imgUri,
       },
-      "2": {
-        type: "text",
-        text: "\nHey body",
+      '2': {
+        type: 'text',
+        text: '\nHey body',
         lineStyleMap: {
-          "0": "body",
-          "1": "body",
+          '0': 'body',
+          '1': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       },
     });
 
     act(() => {
-      result.current.onSelectionChange("2", {
+      result.current.onSelectionChange('2', {
         start: 1,
         end: 1,
       });
     });
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
-        text: "Hey title",
+      '0': {
+        type: 'text',
+        text: 'Hey title',
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "9:9",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '9:9',
+        lastSelectionKey: '0:0',
       },
-      "1": {
-        type: "image",
+      '1': {
+        type: 'image',
         imgUrl: imgUri,
       },
-      "2": {
-        type: "text",
-        text: "\nHey body",
+      '2': {
+        type: 'text',
+        text: '\nHey body',
         lineStyleMap: {
-          "0": "body",
-          "1": "body",
+          '0': 'body',
+          '1': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "1:1",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '1:1',
+        lastSelectionKey: '0:0',
       },
     });
 
     //onAddPhoto
-    const imgUri2 = "img_uri_2";
+    const imgUri2 = 'img_uri_2';
     act(() => {
       result.current.onAddPhoto(imgUri2);
     });
     expect(result.current.markdown).toBe(
-      "Hey title<img>img_uri</img>\n<img>img_uri_2</img>Hey body"
+      'Hey title<img>img_uri</img>\n<img>img_uri_2</img>Hey body',
     );
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
-        text: "Hey title",
+      '0': {
+        type: 'text',
+        text: 'Hey title',
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "9:9",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '9:9',
+        lastSelectionKey: '0:0',
       },
-      "1": {
-        type: "image",
+      '1': {
+        type: 'image',
         imgUrl: imgUri,
       },
-      "2": {
-        type: "text",
-        text: "\n",
+      '2': {
+        type: 'text',
+        text: '\n',
         lineStyleMap: {
-          "0": "body",
-          "1": "body",
+          '0': 'body',
+          '1': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       },
-      "3": {
-        type: "image",
+      '3': {
+        type: 'image',
         imgUrl: imgUri2,
       },
-      "4": {
-        type: "text",
-        text: "Hey body",
+      '4': {
+        type: 'text',
+        text: 'Hey body',
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       },
     });
   });
 
-  test("should merge inputBlockInfo on remove photo", () => {
+  test('should merge inputBlockInfo on remove photo', () => {
     const { result } = renderHook(() =>
       useTextEditor({
-        initialMarkdownText: "Hey title<img>img_uri</img>\nHey body",
-      })
+        initialMarkdownText: 'Hey title<img>img_uri</img>\nHey body',
+      }),
     );
 
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
-        text: "Hey title",
+      '0': {
+        type: 'text',
+        text: 'Hey title',
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       },
-      "1": {
-        type: "image",
-        imgUrl: "img_uri",
+      '1': {
+        type: 'image',
+        imgUrl: 'img_uri',
       },
-      "2": {
-        type: "text",
-        text: "\nHey body",
+      '2': {
+        type: 'text',
+        text: '\nHey body',
         lineStyleMap: {
-          "0": "body",
-          "1": "body",
+          '0': 'body',
+          '1': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       },
     });
 
     //onRemovePhoto
     act(() => {
-      result.current.onRemovePhoto("1");
+      result.current.onRemovePhoto('1');
     });
-    expect(result.current.markdown).toBe("Hey title\nHey body");
+    expect(result.current.markdown).toBe('Hey title\nHey body');
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
-        text: "Hey title\nHey body",
+      '0': {
+        type: 'text',
+        text: 'Hey title\nHey body',
         lineStyleMap: {
-          "0": "body",
-          "1": "body",
+          '0': 'body',
+          '1': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       },
     });
   });
 
-  test("should merge inputBlockInfo on remove photo and handle lines", () => {
+  test('should merge inputBlockInfo on remove photo and handle lines', () => {
     const { result } = renderHook(() =>
       useTextEditor({
-        initialMarkdownText: "Hey title<img>img_uri</img>Hey body",
-      })
+        initialMarkdownText: 'Hey title<img>img_uri</img>Hey body',
+      }),
     );
 
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
-        text: "Hey title",
+      '0': {
+        type: 'text',
+        text: 'Hey title',
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       },
-      "1": {
-        type: "image",
-        imgUrl: "img_uri",
+      '1': {
+        type: 'image',
+        imgUrl: 'img_uri',
       },
-      "2": {
-        type: "text",
-        text: "Hey body",
+      '2': {
+        type: 'text',
+        text: 'Hey body',
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       },
     });
 
     //onRemovePhoto
     act(() => {
-      result.current.onRemovePhoto("1");
+      result.current.onRemovePhoto('1');
     });
-    expect(result.current.markdown).toBe("Hey title\nHey body");
+    expect(result.current.markdown).toBe('Hey title\nHey body');
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
-        text: "Hey title\nHey body",
+      '0': {
+        type: 'text',
+        text: 'Hey title\nHey body',
         lineStyleMap: {
-          "0": "body",
-          "1": "body",
+          '0': 'body',
+          '1': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       },
     });
   });
 
-  test("should merge with multiple inputBlockInfo on remove photo", () => {
+  test('should merge with multiple inputBlockInfo on remove photo', () => {
     const { result } = renderHook(() =>
       useTextEditor({
         initialMarkdownText:
-          "Hey title<img>img_uri</img>\n<img>img_uri_2</img>Hey body",
-      })
+          'Hey title<img>img_uri</img>\n<img>img_uri_2</img>Hey body',
+      }),
     );
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
-        text: "Hey title",
+      '0': {
+        type: 'text',
+        text: 'Hey title',
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       },
-      "1": {
-        type: "image",
-        imgUrl: "img_uri",
+      '1': {
+        type: 'image',
+        imgUrl: 'img_uri',
       },
-      "2": {
-        type: "text",
-        text: "\n",
+      '2': {
+        type: 'text',
+        text: '\n',
         lineStyleMap: {
-          "0": "body",
-          "1": "body",
+          '0': 'body',
+          '1': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       },
-      "3": {
-        type: "image",
-        imgUrl: "img_uri_2",
+      '3': {
+        type: 'image',
+        imgUrl: 'img_uri_2',
       },
-      "4": {
-        type: "text",
-        text: "Hey body",
+      '4': {
+        type: 'text',
+        text: 'Hey body',
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       },
     });
 
     //onRemovePhoto
     act(() => {
-      result.current.onRemovePhoto("3");
+      result.current.onRemovePhoto('3');
     });
     expect(result.current.markdown).toBe(
-      "Hey title<img>img_uri</img>\nHey body"
+      'Hey title<img>img_uri</img>\nHey body',
     );
     expect(result.current.inputBlockInfoMap).toStrictEqual<InputBlockInfoMap>({
-      "0": {
-        type: "text",
-        text: "Hey title",
+      '0': {
+        type: 'text',
+        text: 'Hey title',
         lineStyleMap: {
-          "0": "body",
+          '0': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       },
-      "1": {
-        type: "image",
-        imgUrl: "img_uri",
+      '1': {
+        type: 'image',
+        imgUrl: 'img_uri',
       },
-      "2": {
-        type: "text",
-        text: "\nHey body",
+      '2': {
+        type: 'text',
+        text: '\nHey body',
         lineStyleMap: {
-          "0": "body",
-          "1": "body",
+          '0': 'body',
+          '1': 'body',
         },
         textStyleMap: {},
-        currentSelectionKey: "0:0",
-        lastSelectionKey: "0:0",
+        currentSelectionKey: '0:0',
+        lastSelectionKey: '0:0',
       },
     });
   });

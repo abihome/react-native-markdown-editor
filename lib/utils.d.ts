@@ -13,7 +13,7 @@ export declare const getLineStyleMap: (rawText: string) => LineStyleMap;
 export declare const mardownToInputBlockInfoMap: (mardownText: string) => InputBlockInfoMap;
 export declare const inputBlockInfoMapToMarkdown: (inputBlockInfoMap: InputBlockInfoMap) => string;
 export declare const clearText: (markdown: string, keepTags?: (LineStyle | TextStyle)[]) => string;
-export declare const getClosestSelectionKey: (textStyleMap: TextStyleMap, currentSelectionKey: SelectionKey, includeSelectionEnd?: boolean) => SelectionKey | undefined;
+export declare const getClosestSelectionKey: (textStyleMap: TextStyleMap, currentSelectionKey: SelectionKey, inclusiveSelection?: boolean) => SelectionKey | undefined;
 interface HandleLineStyleShiftSelectionInput {
     lineStyleMap: LineStyleMap;
     currentLineIndex: number;

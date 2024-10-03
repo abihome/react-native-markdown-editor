@@ -1,4 +1,4 @@
-import { LineStyle, Selection, TextStyle, LineKey, InputBlockInfoMap } from "./types";
+import { LineStyle, Selection, TextStyle, LineKey, InputBlockInfoMap } from './types';
 type TextEditorInitalProps = {
     initialMarkdownText?: string;
 };

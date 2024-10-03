@@ -252,6 +252,9 @@ test('getClosestSelectionKey', () => {
   expect(getClosestSelectionKey({ '7:7': ['**'] }, '7:7')).toBe<SelectionKey>(
     '7:7',
   );
+
+  //|Hey|****
+  expect(getClosestSelectionKey({ '3:3': ['**'] }, '0:3', true)).toBe('3:3');
 });
 
 test('handleLineStyleShiftSelection', () => {

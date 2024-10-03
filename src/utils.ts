@@ -266,19 +266,10 @@ export const clearText = (
 export const getClosestSelectionKey = (
   textStyleMap: TextStyleMap,
   currentSelectionKey: SelectionKey,
-  includeSelectionEnd = true,
+  inclusiveSelection = true,
 ): SelectionKey | undefined => {
-  // console.log('getClosestSelectionKey', {
-  //   textStyleMap,
-  //   currentSelectionKey,
-  //   includeSelectionEnd,
-  // });
-  const { start, end } = getSelectionFromKey(currentSelectionKey);
-  if (start !== end) {
-    return undefined;
-  }
-
-  const cursorIndex = start;
+  const { start: startIndex, end: endIndex } =
+    getSelectionFromKey(currentSelectionKey);
 
   const selections = (Object.keys(textStyleMap) as SelectionKey[]).map(
     (selectionKey) => getSelectionFromKey(selectionKey),
@@ -291,9 +282,12 @@ export const getClosestSelectionKey = (
     const selection = selections[i];
     const { start, end } = selection;
     if (
-      cursorIndex >= start &&
-      ((includeSelectionEnd && cursorIndex <= end) ||
-        (!includeSelectionEnd && cursorIndex < end))
+      (startIndex >= start &&
+        ((inclusiveSelection && startIndex <= end) ||
+          (!inclusiveSelection && startIndex < end))) ||
+      (endIndex >= end &&
+        ((inclusiveSelection && endIndex <= end) ||
+          (!inclusiveSelection && endIndex < end)))
     ) {
       const diff = end - start;
       if (!closestDiff || (closestDiff && diff < closestDiff)) {
